@@ -29,21 +29,28 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.changeButton = new System.Windows.Forms.Button();
-            this.confirmationCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.autoOpenDownloadFolderCheckBox = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.askForDownloadFolderCheckBox = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.confirmationCheckBox = new System.Windows.Forms.CheckBox();
+            this.openDownloadFolder = new System.Windows.Forms.Button();
+            this.changeButton = new System.Windows.Forms.Button();
             this.downloadFolderTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.openDownloadFolder);
             this.groupBox1.Controls.Add(this.changeButton);
-            this.groupBox1.Controls.Add(this.confirmationCheckBox);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.downloadFolderTextBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -52,6 +59,87 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.autoOpenDownloadFolderCheckBox);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.askForDownloadFolderCheckBox);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.confirmationCheckBox);
+            this.groupBox2.Location = new System.Drawing.Point(9, 91);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(401, 100);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            // 
+            // autoOpenDownloadFolderCheckBox
+            // 
+            this.autoOpenDownloadFolderCheckBox.AutoSize = true;
+            this.autoOpenDownloadFolderCheckBox.Location = new System.Drawing.Point(205, 67);
+            this.autoOpenDownloadFolderCheckBox.Name = "autoOpenDownloadFolderCheckBox";
+            this.autoOpenDownloadFolderCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.autoOpenDownloadFolderCheckBox.TabIndex = 7;
+            this.autoOpenDownloadFolderCheckBox.UseVisualStyleBackColor = true;
+            this.autoOpenDownloadFolderCheckBox.CheckedChanged += new System.EventHandler(this.autoOpenDownloadFolderCheckBox_CheckedChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 68);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(193, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Auto open download folder on transfer :";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(293, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Always ask to open download folder on transfer completion : ";
+            // 
+            // askForDownloadFolderCheckBox
+            // 
+            this.askForDownloadFolderCheckBox.AutoSize = true;
+            this.askForDownloadFolderCheckBox.Location = new System.Drawing.Point(305, 43);
+            this.askForDownloadFolderCheckBox.Name = "askForDownloadFolderCheckBox";
+            this.askForDownloadFolderCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.askForDownloadFolderCheckBox.TabIndex = 4;
+            this.askForDownloadFolderCheckBox.UseVisualStyleBackColor = true;
+            this.askForDownloadFolderCheckBox.CheckedChanged += new System.EventHandler(this.askForDownloadFolderCheckBox_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(113, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Confirmation needed : ";
+            // 
+            // confirmationCheckBox
+            // 
+            this.confirmationCheckBox.AutoSize = true;
+            this.confirmationCheckBox.Location = new System.Drawing.Point(125, 15);
+            this.confirmationCheckBox.Name = "confirmationCheckBox";
+            this.confirmationCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.confirmationCheckBox.TabIndex = 3;
+            this.confirmationCheckBox.UseVisualStyleBackColor = true;
+            this.confirmationCheckBox.CheckedChanged += new System.EventHandler(this.confirmationCheckBox_CheckedChanged);
+            // 
+            // openDownloadFolder
+            // 
+            this.openDownloadFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.openDownloadFolder.Location = new System.Drawing.Point(246, 55);
+            this.openDownloadFolder.Name = "openDownloadFolder";
+            this.openDownloadFolder.Size = new System.Drawing.Size(87, 24);
+            this.openDownloadFolder.TabIndex = 5;
+            this.openDownloadFolder.Text = "Download Folder";
+            this.openDownloadFolder.UseVisualStyleBackColor = true;
             // 
             // changeButton
             // 
@@ -63,25 +151,6 @@
             this.changeButton.Text = "Change";
             this.changeButton.UseVisualStyleBackColor = true;
             this.changeButton.Click += new System.EventHandler(this.changeButton_Click);
-            // 
-            // confirmationCheckBox
-            // 
-            this.confirmationCheckBox.AutoSize = true;
-            this.confirmationCheckBox.Location = new System.Drawing.Point(125, 66);
-            this.confirmationCheckBox.Name = "confirmationCheckBox";
-            this.confirmationCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.confirmationCheckBox.TabIndex = 3;
-            this.confirmationCheckBox.UseVisualStyleBackColor = true;
-            this.confirmationCheckBox.CheckedChanged += new System.EventHandler(this.confirmationCheckBox_CheckedChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 66);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Confirmation needed : ";
             // 
             // downloadFolderTextBox
             // 
@@ -135,6 +204,8 @@
             this.Text = "Preferences";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -149,5 +220,11 @@
         private System.Windows.Forms.CheckBox confirmationCheckBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button changeButton;
+        private System.Windows.Forms.Button openDownloadFolder;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox askForDownloadFolderCheckBox;
+        private System.Windows.Forms.CheckBox autoOpenDownloadFolderCheckBox;
     }
 }

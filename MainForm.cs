@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Share_a_Ton.Forms;
 using Share_a_Ton.Properties;
 using Share_a_Ton.Tcp;
 using Share_a_Ton.Udp;
-using Message = Share_a_Ton.Tcp.Message;
 
 namespace Share_a_Ton
 {
     public partial class MainForm : Form
     {
         private readonly String _downloadFolderPath;
-        private readonly UdpManager _udpManager;
         private readonly TcpManager _tcpManager;
+        private readonly UdpManager _udpManager;
 
         private TcpListener _listener;
 
@@ -63,14 +59,14 @@ namespace Share_a_Ton
                     MyAddress = ipAddress;
             }
             LocalIpEndPoint = new IPEndPoint(MyAddress, Constants.TcpPort);
-            
+
             _udpManager = new UdpManager(this);
             _udpManager.PeerConnected += AddClientToList;
             _udpManager.PeerDisconnected += RemoveClientFromList;
 
             _tcpManager = new TcpManager(LocalIpEndPoint, _downloadFolderPath);
 
-            var t = new Thread(_tcpManager.StartListeningForTransfers) { IsBackground = true };
+            var t = new Thread(_tcpManager.StartListeningForTransfers) {IsBackground = true};
             t.Start();
 
             #endregion
@@ -106,7 +102,8 @@ namespace Share_a_Ton
                 {
                     listOfPcs.Items.Add(clientItem);
 
-                    var addNotification = new Notification(DateTime.Now.ToShortTimeString() + " : Client joined", client + " has joined!");
+                    var addNotification = new Notification(DateTime.Now.ToShortTimeString() + " : Client joined",
+                        client + " has joined!");
                     addNotification.Show(this);
                 }
             }
@@ -125,11 +122,13 @@ namespace Share_a_Ton
                 {
                     foreach (ListViewItem item in listOfPcs.Items)
                     {
-                        if(item.Text == client.ClientName)
+                        if (item.Text == client.ClientName)
                             item.Remove();
                     }
 
-                    var disconnectNotification = new Notification(DateTime.Now.ToShortTimeString() + " : Client disconnected", client.ClientName + " has disconnected!");
+                    var disconnectNotification =
+                        new Notification(DateTime.Now.ToShortTimeString() + " : Client disconnected",
+                            client.ClientName + " has disconnected!");
                     disconnectNotification.Show(this);
                 }
             }
@@ -268,7 +267,7 @@ namespace Share_a_Ton
         }
 
         #endregion
-        
+
         private delegate void AddRemoveCallback(ClientInfo client);
     }
 }

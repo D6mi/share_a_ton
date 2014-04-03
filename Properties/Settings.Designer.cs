@@ -46,5 +46,29 @@ namespace Share_a_Ton.Properties {
                 this["ConfirmationNeeded"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutomaticallyOpenDownloadFolderOnTransfer {
+            get {
+                return ((bool)(this["AutomaticallyOpenDownloadFolderOnTransfer"]));
+            }
+            set {
+                this["AutomaticallyOpenDownloadFolderOnTransfer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AskToOpenDownloadFolderOnTransfer {
+            get {
+                return ((bool)(this["AskToOpenDownloadFolderOnTransfer"]));
+            }
+            set {
+                this["AskToOpenDownloadFolderOnTransfer"] = value;
+            }
+        }
     }
 }

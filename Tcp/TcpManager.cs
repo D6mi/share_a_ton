@@ -35,14 +35,15 @@ namespace Share_a_Ton.Tcp
                     // Buffer for reading.
                     var buffer = new byte[Constants.DefaultBufferSize];
 
-                    using (var client = _listener.AcceptTcpClient())
+                    using (TcpClient client = _listener.AcceptTcpClient())
                     {
-                        using (var netStream = client.GetStream())
+                        using (NetworkStream netStream = client.GetStream())
                         {
                             netStream.Read(buffer, 0, buffer.Length);
 
                             // Create a new Message based on the data read.
                             var message = new Message(buffer);
+                            String path = _downloadFolderPath + message.Filename;
 
                             // Ask the user whether he/she wants to accept the file.
                             DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
@@ -58,8 +59,7 @@ namespace Share_a_Ton.Tcp
                                 netStream.Write(responseBytes, 0, responseBytes.Length);
 
                                 // Open or create the file for saving.
-                                using (var fileStream = new FileStream((_downloadFolderPath + message.Filename),
-                                    FileMode.Create))
+                                using (var fileStream = new FileStream(path, FileMode.Create))
                                 {
                                     long remaining = message.FileLength;
 
@@ -71,7 +71,7 @@ namespace Share_a_Ton.Tcp
 
                                         if (IsClientDisconnected(client.Client))
                                         {
-                                            var notification = new Notification("Transfer interrupted", 
+                                            var notification = new Notification("Transfer interrupted",
                                                 "The client has terminated the transfer");
                                             notification.Show();
 
@@ -82,15 +82,15 @@ namespace Share_a_Ton.Tcp
                                     }
                                 }
 
-                                if (File.Exists(_downloadFolderPath + message.Filename) && !_transferError)
+                                if (File.Exists(path) && !_transferError)
                                 {
                                     _fileCopied = true;
-                                    var successBytes = Message.ConvertCommandToBytes(Commands.Success);
+                                    byte[] successBytes = Message.ConvertCommandToBytes(Commands.Success);
                                     netStream.Write(successBytes, 0, successBytes.Length);
                                 }
                                 else
                                 {
-                                    var errorBytes = Message.ConvertCommandToBytes(Commands.Success);
+                                    byte[] errorBytes = Message.ConvertCommandToBytes(Commands.Success);
                                     netStream.Write(errorBytes, 0, errorBytes.Length);
                                 }
                             }
@@ -98,7 +98,7 @@ namespace Share_a_Ton.Tcp
                                 // If the user rejected the transfer, send the Reject response.
                             else
                             {
-                                var responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
+                                byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
                                 netStream.Write(responseBytes, 0, responseBytes.Length);
                                 _fileCopied = false;
                             }
@@ -109,11 +109,18 @@ namespace Share_a_Ton.Tcp
                     // the operation ended successfully.
                     if (_fileCopied && !_transferError)
                     {
-                        DialogResult dr = MessageBox.Show("Do you want to open the directory where the file was saved?",
-                            "Confirmation", MessageBoxButtons.OKCancel);
-
-                        if (dr == DialogResult.OK)
-                            Process.Start("explorer", _downloadFolderPath);
+                        if (Options.AskForDownloadFolder)
+                        {
+                            var dr =
+                                MessageBox.Show("Do you want to open the directory where the file was saved?",
+                                    "Confirmation", MessageBoxButtons.OKCancel);
+                            if (dr == DialogResult.OK)
+                                Process.Start("explorer", _downloadFolderPath);
+                        }
+                        else if (Options.AutoOpenDownloadFolder)
+                        {
+                            Process.Start("explorer", _downloadFolderPath); 
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -142,7 +149,7 @@ namespace Share_a_Ton.Tcp
         {
             if (clientSocket.Poll(0, SelectMode.SelectRead))
             {
-                byte[] buffer = new byte[1];
+                var buffer = new byte[1];
                 if (clientSocket.Receive(buffer, SocketFlags.Peek) == 0)
                 {
                     return true;
