@@ -149,6 +149,8 @@ namespace Share_a_Ton
         {
             var shutdownData = new UdpData(UdpCommand.Remove, Username);
             _udpManager.Broadcast(shutdownData);
+
+            MessageBox.Show("Sent shutdown broadcast!");
         }
 
         private void optionToolStripMenuItem_Click(object sender, EventArgs e)

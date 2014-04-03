@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Share_a_Ton.Tcp;
@@ -9,7 +10,6 @@ namespace Share_a_Ton.Forms
     {
         private readonly Transfer _transfer;
         private bool _isRunning;
-        private Thread runningThread;
 
         public TransferView(Transfer transfer)
         {
@@ -21,7 +21,7 @@ namespace Share_a_Ton.Forms
             transferProgress.Maximum = 1000;
 
             filenameLabel.Text = _transfer.Filename;
-            filelengthLabel.Text = (_transfer.FileLength / 1000000) + " mb";
+            FormatFileLengthLabel();
 
             if (_transfer is OutgoingFileTransfer)
                 senderTextLabel.Text = "Sending to : ";
@@ -37,8 +37,7 @@ namespace Share_a_Ton.Forms
 
             _transfer.TransferredChunk += TransferredPart;
 
-           
-            runningThread = new Thread(_transfer.Start) { IsBackground = true };
+            var runningThread = new Thread(_transfer.Start) { IsBackground = true };
             runningThread.Start();
         }
 
@@ -46,7 +45,9 @@ namespace Share_a_Ton.Forms
         {
             get { return _transfer; }
         }
-        
+
+        #region Event Methods
+
         public void TransferConnected(object sender, EventArgs e)
         {
             SetText("Connected...");
@@ -82,12 +83,15 @@ namespace Share_a_Ton.Forms
             SetProgress(value);
         }
 
-        private void button1_Click(object sender, System.EventArgs e)
+        #endregion
+
+        private void button1_Click(object sender, EventArgs e)
         {
             if (_isRunning)
             {
                 _transfer.Abort();
-                Close();
+                statusLabel.Text = "Transfer aborted!";
+                actionButton.Text = "Close";
             }
             else
                 Close();
@@ -139,6 +143,24 @@ namespace Share_a_Ton.Forms
             else
             {
                 actionButton.Text = text;
+            }
+        }
+
+        private void FormatFileLengthLabel()
+        {
+            decimal fileLength = _transfer.FileLength;
+
+            if (fileLength < Constants.KiloByteTreshold)
+            {
+                filelengthLabel.Text = (fileLength/1000).ToString("F") + " kb";
+            }
+            else if(fileLength < Constants.MegaByteTreshold )
+            {
+                filelengthLabel.Text = (fileLength/1000).ToString("F") + " mb";
+            }
+            else if (fileLength > Constants.MegaByteTreshold)
+            {
+                filelengthLabel.Text = (fileLength/1000000000).ToString("F") + " gb";
             }
         }
 

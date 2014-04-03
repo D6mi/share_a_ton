@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
-using Share_a_Ton.Forms;
 
 namespace Share_a_Ton.Tcp
 {
@@ -13,6 +12,7 @@ namespace Share_a_Ton.Tcp
             long fileLength, int bufferSize = short.MaxValue)
             : base(client, sender, ipEndPoint, path, filename, fileLength, bufferSize)
         {
+            
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Share_a_Ton.Tcp
         /// </summary>
         public override void Start()
         {
-            var buffer = new byte[BufferSize];
+            var buffer = new byte[Constants.DefaultBufferSize];
             try
             {
                 Client = new TcpClient();
@@ -46,7 +46,7 @@ namespace Share_a_Ton.Tcp
                         using (var fileStream = new FileStream(Path, FileMode.Open))
                         {
                             OnTransferStarted(EventArgs.Empty);
-                            int bytesRead = 0;
+                            int bytesRead;
                             while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                             {
                                 decimal ratio = (decimal) BytesTransferred/FileLength;
@@ -73,7 +73,6 @@ namespace Share_a_Ton.Tcp
                     else if (command == Commands.Reject)
                     {
                         OnTransferDisconnected(EventArgs.Empty);
-                        MessageBox.Show("The host rejected the transfer!");
                     }
                 }
             }

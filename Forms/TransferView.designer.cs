@@ -148,6 +148,7 @@
             this.Controls.Add(this.transferProgress);
             this.Controls.Add(this.groupBox);
             this.Name = "TransferView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Overview";
             this.groupBox.ResumeLayout(false);
             this.groupBox.PerformLayout();

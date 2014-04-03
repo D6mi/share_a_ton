@@ -14,6 +14,7 @@ namespace Share_a_Ton.Tcp
         public Transfer CurrentTransfer;
         private String _downloadFolderPath;
         private bool _fileCopied;
+        private bool _transferError;
 
         public TcpManager(IPEndPoint localIpEndPoint, String downloadFolderPath)
         {
@@ -34,9 +35,9 @@ namespace Share_a_Ton.Tcp
                     // Buffer for reading.
                     var buffer = new byte[Constants.DefaultBufferSize];
 
-                    using (TcpClient client = _listener.AcceptTcpClient())
+                    using (var client = _listener.AcceptTcpClient())
                     {
-                        using (NetworkStream netStream = client.GetStream())
+                        using (var netStream = client.GetStream())
                         {
                             netStream.Read(buffer, 0, buffer.Length);
 
@@ -74,20 +75,22 @@ namespace Share_a_Ton.Tcp
                                                 "The client has terminated the transfer");
                                             notification.Show();
 
+                                            _transferError = true;
+
                                             throw new Exception("The client has terminated the connection!");
                                         }
                                     }
                                 }
 
-                                if (File.Exists(_downloadFolderPath + message.Filename))
+                                if (File.Exists(_downloadFolderPath + message.Filename) && !_transferError)
                                 {
                                     _fileCopied = true;
-                                    byte[] successBytes = Message.ConvertCommandToBytes(Commands.Success);
+                                    var successBytes = Message.ConvertCommandToBytes(Commands.Success);
                                     netStream.Write(successBytes, 0, successBytes.Length);
                                 }
                                 else
                                 {
-                                    byte[] errorBytes = Message.ConvertCommandToBytes(Commands.Success);
+                                    var errorBytes = Message.ConvertCommandToBytes(Commands.Success);
                                     netStream.Write(errorBytes, 0, errorBytes.Length);
                                 }
                             }
@@ -95,15 +98,16 @@ namespace Share_a_Ton.Tcp
                                 // If the user rejected the transfer, send the Reject response.
                             else
                             {
-                                byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
+                                var responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
                                 netStream.Write(responseBytes, 0, responseBytes.Length);
+                                _fileCopied = false;
                             }
                         }
                     }
 
                     // If the file was successfully transfered, send the Success message notifying the client that
                     // the operation ended successfully.
-                    if (_fileCopied)
+                    if (_fileCopied && !_transferError)
                     {
                         DialogResult dr = MessageBox.Show("Do you want to open the directory where the file was saved?",
                             "Confirmation", MessageBoxButtons.OKCancel);
