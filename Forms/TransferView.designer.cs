@@ -32,7 +32,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.filelengthLabel = new System.Windows.Forms.Label();
             this.senderLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.senderTextLabel = new System.Windows.Forms.Label();
             this.filenameLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.transferProgress = new System.Windows.Forms.ProgressBar();
@@ -46,7 +46,7 @@
             this.groupBox.Controls.Add(this.label5);
             this.groupBox.Controls.Add(this.filelengthLabel);
             this.groupBox.Controls.Add(this.senderLabel);
-            this.groupBox.Controls.Add(this.label2);
+            this.groupBox.Controls.Add(this.senderTextLabel);
             this.groupBox.Controls.Add(this.filenameLabel);
             this.groupBox.Controls.Add(this.label1);
             this.groupBox.Location = new System.Drawing.Point(12, 12);
@@ -83,14 +83,14 @@
             this.senderLabel.TabIndex = 3;
             this.senderLabel.Text = "D6mi-Pc";
             // 
-            // label2
+            // senderTextLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 91);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Sender : ";
+            this.senderTextLabel.AutoSize = true;
+            this.senderTextLabel.Location = new System.Drawing.Point(15, 91);
+            this.senderTextLabel.Name = "senderTextLabel";
+            this.senderTextLabel.Size = new System.Drawing.Size(50, 13);
+            this.senderTextLabel.TabIndex = 2;
+            this.senderTextLabel.Text = "Sender : ";
             // 
             // filenameLabel
             // 
@@ -161,7 +161,7 @@
         private System.Windows.Forms.GroupBox groupBox;
         private System.Windows.Forms.ProgressBar transferProgress;
         private System.Windows.Forms.Label senderLabel;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label senderTextLabel;
         private System.Windows.Forms.Label filenameLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button actionButton;

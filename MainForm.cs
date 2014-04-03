@@ -130,7 +130,7 @@ namespace Share_a_Ton
                     }
 
                     var disconnectNotification = new Notification(DateTime.Now.ToShortTimeString() + " : Client disconnected", client.ClientName + " has disconnected!");
-                    disconnectNotification.Show();
+                    disconnectNotification.Show(this);
                 }
             }
         }

@@ -11,7 +11,6 @@ namespace Share_a_Ton.Forms
         private bool _isRunning;
         private Thread runningThread;
 
-
         public TransferView(Transfer transfer)
         {
             InitializeComponent();
@@ -23,6 +22,11 @@ namespace Share_a_Ton.Forms
 
             filenameLabel.Text = _transfer.Filename;
             filelengthLabel.Text = (_transfer.FileLength / 1000000) + " mb";
+
+            if (_transfer is OutgoingFileTransfer)
+                senderTextLabel.Text = "Sending to : ";
+            else
+                senderTextLabel.Text = "Sender : ";
             senderLabel.Text = _transfer.Sender;
 
             _transfer.Connected += TransferConnected;
@@ -38,8 +42,6 @@ namespace Share_a_Ton.Forms
             runningThread.Start();
         }
 
-        public int LastValue = 0;
-
         public Transfer Transfer
         {
             get { return _transfer; }
@@ -47,13 +49,13 @@ namespace Share_a_Ton.Forms
         
         public void TransferConnected(object sender, EventArgs e)
         {
-            SetText("Connected");
+            SetText("Connected...");
             _isRunning = true;
         }
 
         public void TransferDisconnected(object sender, EventArgs e)
         {
-            SetText("TRANSFER DISCONNECT OR REJECT!");
+            SetText("Transfer rejected...");
 
             SetButtonText("Okay");
             _isRunning = false;
@@ -61,13 +63,13 @@ namespace Share_a_Ton.Forms
 
         public void TransferStarted(object sender, EventArgs e)
         {
-            SetText("TRANSFER STARTED!");
+            SetText("Transfer started...");
             _isRunning = false;
         }
 
         public void TransferCompleted(object sender, EventArgs e)
         {
-            SetText("TRANSFER COMPLETED!");
+            SetText("Transfer completed!");
 
             SetButtonText("Close");
             _isRunning = false;
@@ -75,8 +77,8 @@ namespace Share_a_Ton.Forms
 
         public void TransferredPart(object sender, EventArgs e)
         {
-            TransferArgs args = (TransferArgs) e;
-            int value = args.BytesTransfered;
+            var args = (TransferArgs) e;
+            var value = args.BytesTransfered;
             SetProgress(value);
         }
 

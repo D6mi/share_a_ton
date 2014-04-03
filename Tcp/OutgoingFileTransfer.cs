@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using Share_a_Ton.Forms;
 
 namespace Share_a_Ton.Tcp
 {
@@ -67,10 +68,7 @@ namespace Share_a_Ton.Tcp
                         if (command == Commands.Success)
                         {
                             OnTransferCompleted(EventArgs.Empty);
-                            MessageBox.Show("The host successfully received the file!");
                         }
-                        else
-                            MessageBox.Show("The transfer was unsuccessful!");
                     }
                     else if (command == Commands.Reject)
                     {
