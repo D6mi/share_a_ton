@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Share_a_Ton.Udp;
 
-namespace Share_a_Ton
+namespace Share_a_Ton.Utilities
 {
     public class Helpers
     {

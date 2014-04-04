@@ -1,8 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using Share_a_Ton.Tcp;
+using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton.Forms
 {
@@ -31,13 +32,13 @@ namespace Share_a_Ton.Forms
 
             _transfer.Connected += TransferConnected;
             _transfer.Disconnected += TransferDisconnected;
-            
+
             _transfer.Started += TransferStarted;
             _transfer.Completed += TransferCompleted;
 
             _transfer.TransferredChunk += TransferredPart;
 
-            var runningThread = new Thread(_transfer.Start) { IsBackground = true };
+            var runningThread = new Thread(_transfer.Start) {IsBackground = true};
             runningThread.Start();
         }
 
@@ -79,7 +80,7 @@ namespace Share_a_Ton.Forms
         public void TransferredPart(object sender, EventArgs e)
         {
             var args = (TransferArgs) e;
-            var value = args.BytesTransfered;
+            int value = args.BytesTransfered;
             SetProgress(value);
         }
 
@@ -102,7 +103,7 @@ namespace Share_a_Ton.Forms
             if (statusLabel.InvokeRequired)
             {
                 SetTextCallback textCallback = SetText;
-                Invoke(textCallback, new object[] { text });
+                Invoke(textCallback, new object[] {text});
             }
             else
             {
@@ -115,20 +116,20 @@ namespace Share_a_Ton.Forms
             if (transferProgress.InvokeRequired)
             {
                 SetProgressCallback progressCallback = SetProgress;
-                Invoke(progressCallback, new object[] { value });
+                Invoke(progressCallback, new object[] {value});
             }
             else
             {
                 transferProgress.Value = value;
 
-                if (Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.IsPlatformSupported)
+                if (TaskbarManager.IsPlatformSupported)
                 {
-                    var taskbarInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
+                    TaskbarManager taskbarInstance = TaskbarManager.Instance;
 
-                    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Normal);
+                    taskbarInstance.SetProgressState(TaskbarProgressBarState.Normal);
                     taskbarInstance.SetProgressValue(value, 100);
 
-                    taskbarInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+                    taskbarInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
                 }
             }
         }
@@ -138,7 +139,7 @@ namespace Share_a_Ton.Forms
             if (actionButton.InvokeRequired)
             {
                 SetButtonTextCallback textCallback = SetButtonText;
-                Invoke(textCallback, new object[] { text });
+                Invoke(textCallback, new object[] {text});
             }
             else
             {
@@ -154,7 +155,7 @@ namespace Share_a_Ton.Forms
             {
                 filelengthLabel.Text = (fileLength/1000).ToString("F") + " kb";
             }
-            else if(fileLength < Constants.MegaByteTreshold )
+            else if (fileLength < Constants.MegaByteTreshold)
             {
                 filelengthLabel.Text = (fileLength/1000).ToString("F") + " mb";
             }
@@ -165,10 +166,10 @@ namespace Share_a_Ton.Forms
         }
 
 
-        private delegate void SetTextCallback(string text);
+        private delegate void SetButtonTextCallback(string text);
 
         private delegate void SetProgressCallback(int value);
 
-        private delegate void SetButtonTextCallback(string text);
+        private delegate void SetTextCallback(string text);
     }
 }

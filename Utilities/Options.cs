@@ -1,6 +1,6 @@
 ﻿using Share_a_Ton.Properties;
 
-namespace Share_a_Ton
+namespace Share_a_Ton.Utilities
 {
     public static class Options
     {

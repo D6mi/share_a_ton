@@ -9,6 +9,7 @@ using Share_a_Ton.Forms;
 using Share_a_Ton.Properties;
 using Share_a_Ton.Tcp;
 using Share_a_Ton.Udp;
+using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton
 {
@@ -17,8 +18,6 @@ namespace Share_a_Ton
         private readonly String _downloadFolderPath;
         private readonly TcpManager _tcpManager;
         private readonly UdpManager _udpManager;
-
-        private TcpListener _listener;
 
         public MainForm()
         {

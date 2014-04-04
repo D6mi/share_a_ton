@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton.Tcp
 {

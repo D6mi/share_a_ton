@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using Share_a_Ton.Forms;
+using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton.Tcp
 {
@@ -12,6 +13,7 @@ namespace Share_a_Ton.Tcp
     {
         private readonly TcpListener _listener;
         public Transfer CurrentTransfer;
+
         private String _downloadFolderPath;
         private bool _fileCopied;
         private bool _transferError;
@@ -35,31 +37,41 @@ namespace Share_a_Ton.Tcp
                     // Buffer for reading.
                     var buffer = new byte[Constants.DefaultBufferSize];
 
-                    using (TcpClient client = _listener.AcceptTcpClient())
+                    var client = _listener.AcceptTcpClient();
+                    var netStream = client.GetStream();
+
+                    netStream.Read(buffer, 0, buffer.Length);
+
+                    // Create a new Message based on the data read.
+                    var message = new Message(buffer);
+
+                    string filename = message.Filename;
+                    string path = _downloadFolderPath + message.Filename;
+                    long fileLength = message.FileLength;
+
+                    // Ask the user whether he/she wants to accept the file.
+                    DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
+                        "Accept or reject?", MessageBoxButtons.OKCancel);
+
+                    // If the user says yes, send the accept response and start accepting the file data.
+                    if (dr == DialogResult.OK)
                     {
-                        using (NetworkStream netStream = client.GetStream())
-                        {
-                            netStream.Read(buffer, 0, buffer.Length);
+                        // The Message class static methods for transforming commands into byte arrays.
+                        byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Accept);
 
-                            // Create a new Message based on the data read.
-                            var message = new Message(buffer);
-                            String path = _downloadFolderPath + message.Filename;
+                        // Send the accept response.
+                        netStream.Write(responseBytes, 0, responseBytes.Length);
 
-                            // Ask the user whether he/she wants to accept the file.
-                            DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
-                                "Accept or reject?", MessageBoxButtons.OKCancel);
+                        var transfer = new IncomingFileTransfer(client, "Sender", null, path, filename,
+                            fileLength);
+                        var tView = new TransferView(transfer);
+                        tView.ShowDialog();
 
-                            // If the user says yes, send the accept response and start accepting the file data.
-                            if (dr == DialogResult.OK)
-                            {
-                                // The Message class static methods for transforming commands into byte arrays.
-                                byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Accept);
+                        #region Transfer Code
 
-                                // Send the accept response.
-                                netStream.Write(responseBytes, 0, responseBytes.Length);
-
+                        /*
                                 // Open or create the file for saving.
-                                using (var fileStream = new FileStream(path, FileMode.Create))
+                                using (var fileStream = new FileStream(_path, FileMode.Create))
                                 {
                                     long remaining = message.FileLength;
 
@@ -82,7 +94,7 @@ namespace Share_a_Ton.Tcp
                                     }
                                 }
 
-                                if (File.Exists(path) && !_transferError)
+                                if (File.Exists(_path) && !_transferError)
                                 {
                                     _fileCopied = true;
                                     byte[] successBytes = Message.ConvertCommandToBytes(Commands.Success);
@@ -93,16 +105,17 @@ namespace Share_a_Ton.Tcp
                                     byte[] errorBytes = Message.ConvertCommandToBytes(Commands.Success);
                                     netStream.Write(errorBytes, 0, errorBytes.Length);
                                 }
-                            }
+                               */
 
-                                // If the user rejected the transfer, send the Reject response.
-                            else
-                            {
-                                byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
-                                netStream.Write(responseBytes, 0, responseBytes.Length);
-                                _fileCopied = false;
-                            }
-                        }
+                        #endregion
+
+                        // If the user rejected the transfer, send the Reject response.
+                    }
+                    else
+                    {
+                        byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
+                        netStream.Write(responseBytes, 0, responseBytes.Length);
+                        _fileCopied = false;
                     }
 
                     // If the file was successfully transfered, send the Success message notifying the client that
@@ -111,15 +124,14 @@ namespace Share_a_Ton.Tcp
                     {
                         if (Options.AskForDownloadFolder)
                         {
-                            var dr =
-                                MessageBox.Show("Do you want to open the directory where the file was saved?",
+                            DialogResult dirResult = MessageBox.Show("Do you want to open the directory where the file was saved?",
                                     "Confirmation", MessageBoxButtons.OKCancel);
-                            if (dr == DialogResult.OK)
+                            if (dirResult == DialogResult.OK)
                                 Process.Start("explorer", _downloadFolderPath);
                         }
                         else if (Options.AutoOpenDownloadFolder)
                         {
-                            Process.Start("explorer", _downloadFolderPath); 
+                            Process.Start("explorer", _downloadFolderPath);
                         }
                     }
                 }

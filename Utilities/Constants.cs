@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Share_a_Ton
+namespace Share_a_Ton.Utilities
 {
     public static class Constants
     {
@@ -10,7 +10,7 @@ namespace Share_a_Ton
 
         public const int TcpPort = 11111;
         public const int UdpPort = 10000;
-        public const int DefaultBufferSize = 512;
+        public const int DefaultBufferSize = short.MaxValue;
 
         public const long KiloByteTreshold = 1000000;
         public const long MegaByteTreshold = 1000000000;
