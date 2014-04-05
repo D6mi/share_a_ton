@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Share_a_Ton.Forms;
 using Share_a_Ton.Utilities;
 
@@ -16,7 +16,6 @@ namespace Share_a_Ton.Tcp
 
         private String _downloadFolderPath;
         private bool _fileCopied;
-        private bool _transferError;
 
         public TcpManager(IPEndPoint localIpEndPoint, String downloadFolderPath)
         {
@@ -37,17 +36,18 @@ namespace Share_a_Ton.Tcp
                     // Buffer for reading.
                     var buffer = new byte[Constants.DefaultBufferSize];
 
-                    var client = _listener.AcceptTcpClient();
-                    var netStream = client.GetStream();
+                    TcpClient client = _listener.AcceptTcpClient();
+                    NetworkStream netStream = client.GetStream();
 
-                    netStream.Read(buffer, 0, buffer.Length);
+                    var reader = new StreamReader(netStream);
+                    string json = reader.ReadLine();
 
-                    // Create a new Message based on the data read.
-                    var message = new Message(buffer);
+                    var message = new JSONMessage();
+                    message = JsonConvert.DeserializeObject<JSONMessage>(json);
 
-                    string filename = message.Filename;
-                    string path = _downloadFolderPath + message.Filename;
-                    long fileLength = message.FileLength;
+                    var filename = message.Filename;
+                    var path = _downloadFolderPath + message.Filename;
+                    var fileLength = message.FileLength;
 
                     // Ask the user whether he/she wants to accept the file.
                     DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
@@ -118,13 +118,15 @@ namespace Share_a_Ton.Tcp
                         _fileCopied = false;
                     }
 
+                    /*
                     // If the file was successfully transfered, send the Success message notifying the client that
                     // the operation ended successfully.
                     if (_fileCopied && !_transferError)
                     {
                         if (Options.AskForDownloadFolder)
                         {
-                            DialogResult dirResult = MessageBox.Show("Do you want to open the directory where the file was saved?",
+                            DialogResult dirResult =
+                                MessageBox.Show("Do you want to open the directory where the file was saved?",
                                     "Confirmation", MessageBoxButtons.OKCancel);
                             if (dirResult == DialogResult.OK)
                                 Process.Start("explorer", _downloadFolderPath);
@@ -134,6 +136,8 @@ namespace Share_a_Ton.Tcp
                             Process.Start("explorer", _downloadFolderPath);
                         }
                     }
+                    */
+
                 }
                 catch (Exception ex)
                 {
@@ -154,20 +158,7 @@ namespace Share_a_Ton.Tcp
 
         public void UpdateDownloadPath(string downloadFolderPath)
         {
-            _downloadFolderPath = downloadFolderPath;
-        }
-
-        private bool IsClientDisconnected(Socket clientSocket)
-        {
-            if (clientSocket.Poll(0, SelectMode.SelectRead))
-            {
-                var buffer = new byte[1];
-                if (clientSocket.Receive(buffer, SocketFlags.Peek) == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
+            _downloadFolderPath = downloadFolderPath + "\\";
         }
     }
 }

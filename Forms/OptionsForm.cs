@@ -8,6 +8,11 @@ namespace Share_a_Ton.Forms
     public partial class OptionsForm : Form
     {
         /// <summary>
+        /// The name by which this PC will be known.
+        /// </summary>
+        public String Username { get; private set; }
+
+        /// <summary>
         /// This variable affects the transfer process. Typically, the Client needs permission from the 
         /// Server to initiate the file transfer. If the "_confirmationNeeded" is set to "false" then the 
         /// permission is NOT required and the transfer will automatically start upon the Client's request.
@@ -29,17 +34,21 @@ namespace Share_a_Ton.Forms
         /// </summary>
         public string DownloadFolderPath { get; private set; }
 
-        // Setups the initial state of the controls on the form according to the values in
-        // the settings file.
+        /// <summary>
+        /// Setup the initial state of the controls on the form according to the values in
+        /// the settings file.
+        /// </summary>
         public OptionsForm()
         {
             InitializeComponent();
 
-            DownloadFolderPath = Settings.Default.DownloadFolder + "\\";
+            Username = Settings.Default.Username;
+            DownloadFolderPath = Settings.Default.DownloadFolder;
             ConfirmationNeeded = Settings.Default.ConfirmationNeeded;
             AskForDownloadFolder = Settings.Default.AskToOpenDownloadFolderOnTransfer;
             AutoOpenDownloadFolder = Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer;
 
+            usernameTextBox.Text = Username;
             downloadFolderTextBox.Text = DownloadFolderPath;
             confirmationCheckBox.Checked = ConfirmationNeeded;
             askForDownloadFolderCheckBox.Checked = AskForDownloadFolder;
@@ -64,17 +73,21 @@ namespace Share_a_Ton.Forms
             }
         }
 
-        // Save the settings to the Settings file. This method does not check if the values have changed in
-        // relation to the already saved Settings, it just overrides the Settings file with the latest values
-        // regardless if there has been a change.
+        /// <summary>
+        /// Save the settings to the Settings file. This method does not check if the values have changed in
+        //  relation to the already saved Settings, it just overrides the Settings file with the latest values
+        //  regardless if there has been a change.
+        /// </summary>
         public void ApplySettings()
         {
+            Settings.Default.Username = Username;
             Settings.Default.DownloadFolder = DownloadFolderPath;
             Settings.Default.ConfirmationNeeded = ConfirmationNeeded;
             Settings.Default.AskToOpenDownloadFolderOnTransfer = AskForDownloadFolder;
             Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer = AutoOpenDownloadFolder;
             Settings.Default.Save();
 
+            Options.Username = Username;
             Options.DownloadFolderPath = DownloadFolderPath;
             Options.ConfirmationNeeded = ConfirmationNeeded;
             Options.AutoOpenDownloadFolder = AutoOpenDownloadFolder;
@@ -101,6 +114,11 @@ namespace Share_a_Ton.Forms
                 AskForDownloadFolder = false;
                 askForDownloadFolderCheckBox.Checked = false;
             }
+        }
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            Username = usernameTextBox.Text;
         }
     }
 }

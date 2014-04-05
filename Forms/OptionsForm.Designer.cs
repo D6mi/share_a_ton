@@ -42,12 +42,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.usernameErrorLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.usernameErrorLabel);
+            this.groupBox1.Controls.Add(this.usernameTextBox);
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.openDownloadFolder);
             this.groupBox1.Controls.Add(this.changeButton);
@@ -55,7 +61,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(416, 216);
+            this.groupBox1.Size = new System.Drawing.Size(416, 219);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
@@ -68,7 +74,7 @@
             this.groupBox2.Controls.Add(this.askForDownloadFolderCheckBox);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.confirmationCheckBox);
-            this.groupBox2.Location = new System.Drawing.Point(9, 91);
+            this.groupBox2.Location = new System.Drawing.Point(9, 111);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(401, 100);
             this.groupBox2.TabIndex = 6;
@@ -134,7 +140,7 @@
             // openDownloadFolder
             // 
             this.openDownloadFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.openDownloadFolder.Location = new System.Drawing.Point(246, 55);
+            this.openDownloadFolder.Location = new System.Drawing.Point(246, 81);
             this.openDownloadFolder.Name = "openDownloadFolder";
             this.openDownloadFolder.Size = new System.Drawing.Size(87, 24);
             this.openDownloadFolder.TabIndex = 5;
@@ -144,7 +150,7 @@
             // changeButton
             // 
             this.changeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.changeButton.Location = new System.Drawing.Point(339, 55);
+            this.changeButton.Location = new System.Drawing.Point(339, 81);
             this.changeButton.Name = "changeButton";
             this.changeButton.Size = new System.Drawing.Size(71, 24);
             this.changeButton.TabIndex = 4;
@@ -154,7 +160,7 @@
             // 
             // downloadFolderTextBox
             // 
-            this.downloadFolderTextBox.Location = new System.Drawing.Point(103, 29);
+            this.downloadFolderTextBox.Location = new System.Drawing.Point(103, 55);
             this.downloadFolderTextBox.Name = "downloadFolderTextBox";
             this.downloadFolderTextBox.Size = new System.Drawing.Size(307, 20);
             this.downloadFolderTextBox.TabIndex = 1;
@@ -162,7 +168,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 32);
+            this.label2.Location = new System.Drawing.Point(6, 58);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 0;
@@ -171,7 +177,7 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(353, 234);
+            this.cancelButton.Location = new System.Drawing.Point(353, 237);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 2;
@@ -181,18 +187,44 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(258, 234);
+            this.okButton.Location = new System.Drawing.Point(258, 237);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
             this.okButton.Text = "Ok";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(44, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Name : ";
+            // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(103, 25);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(164, 20);
+            this.usernameTextBox.TabIndex = 8;
+            // 
+            // usernameErrorLabel
+            // 
+            this.usernameErrorLabel.AutoSize = true;
+            this.usernameErrorLabel.ForeColor = System.Drawing.Color.Red;
+            this.usernameErrorLabel.Location = new System.Drawing.Point(273, 28);
+            this.usernameErrorLabel.Name = "usernameErrorLabel";
+            this.usernameErrorLabel.Size = new System.Drawing.Size(0, 13);
+            this.usernameErrorLabel.TabIndex = 9;
             // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(440, 266);
+            this.ClientSize = new System.Drawing.Size(440, 269);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.groupBox1);
@@ -226,5 +258,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox askForDownloadFolderCheckBox;
         private System.Windows.Forms.CheckBox autoOpenDownloadFolderCheckBox;
+        private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label usernameErrorLabel;
     }
 }

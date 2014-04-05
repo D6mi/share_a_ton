@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton.Tcp
@@ -31,10 +32,18 @@ namespace Share_a_Ton.Tcp
 
                 using (NetworkStream networkStream = Client.GetStream())
                 {
-                    var message = new Message(Filename, FileLength);
-                    byte[] messageBytes = message.ToBytes();
+                    var jsonMessage = new JSONMessage()
+                    {
+                        Command = Commands.Send,
+                        FileLength = FileLength,
+                        Filename = Filename,
+                        Sender = "D6mi-PC"
+                    };
 
-                    networkStream.Write(messageBytes, 0, messageBytes.Length);
+                    string json = JsonConvert.SerializeObject(jsonMessage);
+
+                    var writer = new StreamWriter(networkStream) { AutoFlush = true };
+                    writer.WriteLine(json);
 
                     networkStream.Read(buffer, 0, buffer.Length);
 

@@ -74,7 +74,7 @@ namespace Share_a_Ton.Udp
                                         PeerConnected(this, new ClientArgs(client));
 
                                     // Form.AddClientToList(client);
-                                    var data = new UdpData(UdpCommand.Add, Form.Username);
+                                    var data = new UdpData(UdpCommand.Add, Options.Username);
                                     Broadcast(data);
                                     break;
                             }

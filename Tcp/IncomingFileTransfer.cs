@@ -92,7 +92,7 @@ namespace Share_a_Ton.Tcp
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
             }
             finally
             {

@@ -25,6 +25,10 @@ namespace Share_a_Ton
 
             #region Initial Setup
 
+            String username = Dns.GetHostName();
+            Settings.Default.Username = username;
+            Settings.Default.Save();
+
             String path = Settings.Default.DownloadFolder;
 
             if (String.IsNullOrWhiteSpace(path))
@@ -41,16 +45,11 @@ namespace Share_a_Ton
                     Settings.Default.Save();
                 }
             }
-            else
-            {
-                _downloadFolderPath = path + "\\";
-            }
 
             #endregion
 
             #region Network related
 
-            Username = Dns.GetHostName();
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (IPAddress ipAddress in host.AddressList)
             {
@@ -71,7 +70,6 @@ namespace Share_a_Ton
             #endregion
         }
 
-        public String Username { get; private set; }
         public IPAddress MyAddress { get; private set; }
         private IPEndPoint LocalIpEndPoint { get; set; }
 
@@ -139,13 +137,13 @@ namespace Share_a_Ton
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            var data = new UdpData(UdpCommand.AddRefresh, Username);
+            var data = new UdpData(UdpCommand.AddRefresh, Options.Username);
             _udpManager.Broadcast(data);
         }
 
         private void mainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var shutdownData = new UdpData(UdpCommand.Remove, Username);
+            var shutdownData = new UdpData(UdpCommand.Remove, Options.Username);
             _udpManager.Broadcast(shutdownData);
 
             MessageBox.Show("Sent shutdown broadcast!");
