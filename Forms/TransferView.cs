@@ -157,7 +157,7 @@ namespace Share_a_Ton.Forms
             }
             else if (fileLength < Constants.MegaByteTreshold)
             {
-                filelengthLabel.Text = (fileLength/1000).ToString("F") + " mb";
+                filelengthLabel.Text = (fileLength/1000000).ToString("F") + " mb";
             }
             else if (fileLength > Constants.MegaByteTreshold)
             {

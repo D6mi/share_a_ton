@@ -16,6 +16,11 @@ namespace Share_a_Ton.Utilities
         public const long KiloByteTreshold = 1000000;
         public const long MegaByteTreshold = 1000000000;
 
-        public const String OptionsUsernameOrDownloadFolderError = "Username and download folder path are mandatory!";
+        public const String OptionsUsernameOrDownloadFolderErrorString = "Username and download folder path are mandatory!";
+        public const String ChooseFileString = "Please choose a folder to which all of you're files will be saved!";
+        public const String MultipleFilesDraggedErrorString = "Please drag one file at a time!";
+        public const String DirectoryDraggedErrorString = "You've chosen a directory, please only drag and drop files!";
+        public const String DragLocationErrorString = "You need to drop the file on one of the computers in the LAN list!";
+        public const String DragTipString = "Drop the file on the LAN PC you want to send the file to!";
     }
 }

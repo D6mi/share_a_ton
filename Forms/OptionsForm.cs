@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Net;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Share_a_Ton.Properties;
 using Share_a_Ton.Utilities;
 
@@ -11,8 +10,6 @@ namespace Share_a_Ton.Forms
     public partial class OptionsForm : Form
     {
         private const int MaxNumberOfCharacters = 10;
-        private bool _firstTimeSetup;
-        private bool _checkFlag = false;
 
         /// <summary>
         /// The name by which this PC will be known.
@@ -49,7 +46,7 @@ namespace Share_a_Ton.Forms
         {
             InitializeComponent();
 
-            _firstTimeSetup = Settings.Default.FirstTimeSetupPerformed;
+            usernameTextBox.Focus();
 
             Username = Settings.Default.Username;
             DownloadFolderPath = Settings.Default.DownloadFolder;
@@ -72,7 +69,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -139,7 +136,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -196,7 +193,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -210,8 +207,13 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
             }
+        }
+
+        private void OptionsForm_Shown(object sender, EventArgs e)
+        {
+            usernameTextBox.Focus();
         }
     }
 }
