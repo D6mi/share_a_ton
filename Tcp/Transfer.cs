@@ -19,7 +19,7 @@ namespace Share_a_Ton.Tcp
         /// <param name="filename">The name of the file to be sent.</param>
         /// <param name="fileLength">The length of the file to be sent.</param>
         /// <param name="bufferSize">The size of the sending buffer. 32767 by default.</param>
-        public Transfer(TcpClient client, String sender, IPEndPoint ipEndPoint, String path, String filename,
+        protected Transfer(TcpClient client, String sender, IPEndPoint ipEndPoint, String path, String filename,
             long fileLength, int bufferSize = short.MaxValue)
         {
             Client = client;

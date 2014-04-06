@@ -46,6 +46,8 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.statusLabel = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.autoFadeOutCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +64,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(416, 219);
+            this.groupBox1.Size = new System.Drawing.Size(416, 249);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
@@ -96,6 +98,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.autoFadeOutCheckBox);
+            this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.autoOpenDownloadFolderCheckBox);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label1);
@@ -104,7 +108,7 @@
             this.groupBox2.Controls.Add(this.confirmationCheckBox);
             this.groupBox2.Location = new System.Drawing.Point(9, 111);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(401, 100);
+            this.groupBox2.Size = new System.Drawing.Size(401, 118);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             // 
@@ -207,7 +211,7 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(353, 237);
+            this.cancelButton.Location = new System.Drawing.Point(351, 267);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 2;
@@ -217,7 +221,7 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(272, 237);
+            this.okButton.Location = new System.Drawing.Point(270, 267);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -234,11 +238,30 @@
             this.statusLabel.Size = new System.Drawing.Size(0, 13);
             this.statusLabel.TabIndex = 4;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 93);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(192, 13);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "Auto close transfer overview on finish : ";
+            // 
+            // autoFadeOutCheckBox
+            // 
+            this.autoFadeOutCheckBox.AutoSize = true;
+            this.autoFadeOutCheckBox.Location = new System.Drawing.Point(205, 92);
+            this.autoFadeOutCheckBox.Name = "autoFadeOutCheckBox";
+            this.autoFadeOutCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.autoFadeOutCheckBox.TabIndex = 9;
+            this.autoFadeOutCheckBox.UseVisualStyleBackColor = true;
+            this.autoFadeOutCheckBox.CheckedChanged += new System.EventHandler(this.fadeOutCheckBox_CheckedChanged);
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(440, 269);
+            this.ClientSize = new System.Drawing.Size(440, 302);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
@@ -249,6 +272,7 @@
             this.Name = "OptionsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Preferences";
+            this.Shown += new System.EventHandler(this.OptionsForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -278,5 +302,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label usernameErrorLabel;
         private System.Windows.Forms.Label statusLabel;
+        private System.Windows.Forms.CheckBox autoFadeOutCheckBox;
+        private System.Windows.Forms.Label label6;
     }
 }

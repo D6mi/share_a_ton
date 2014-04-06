@@ -37,7 +37,7 @@ namespace Share_a_Ton.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool ConfirmationNeeded {
             get {
                 return ((bool)(this["ConfirmationNeeded"]));
@@ -92,6 +92,18 @@ namespace Share_a_Ton.Properties {
             }
             set {
                 this["FirstTimeSetupPerformed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoFadeOut {
+            get {
+                return ((bool)(this["AutoFadeOut"]));
+            }
+            set {
+                this["AutoFadeOut"] = value;
             }
         }
     }

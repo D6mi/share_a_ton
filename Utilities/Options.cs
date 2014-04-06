@@ -29,6 +29,12 @@ namespace Share_a_Ton.Utilities
         public static bool AskForDownloadFolder = Settings.Default.AskToOpenDownloadFolderOnTransfer;
 
         /// <summary>
+        /// Determines whether the Transfer Overview will be automatically closed after 1.5 seconds after
+        /// the transfer completes, allowing the next transfer to start automatically.
+        /// </summary>
+        public static bool AutoFadeOut = Settings.Default.AutoFadeOut;
+
+        /// <summary>
         /// This is the folder in which all of the transferred files will be saved.
         /// </summary>
         public static string DownloadFolderPath = Settings.Default.DownloadFolder;

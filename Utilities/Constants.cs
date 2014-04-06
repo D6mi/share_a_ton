@@ -13,8 +13,9 @@ namespace Share_a_Ton.Utilities
         public const int UdpPort = 10000;
         public const int DefaultBufferSize = short.MaxValue;
 
-        public const long KiloByteTreshold = 1000000;
-        public const long MegaByteTreshold = 1000000000;
+        public const long KiloByteTreshold = 1000;
+        public const long MegaByteTreshold = 1000000;
+        public const long GigaByteTreshold = 1000000000;
 
         public const String OptionsUsernameOrDownloadFolderErrorString = "Username and download folder path are mandatory!";
         public const String ChooseFileString = "Please choose a folder to which all of you're files will be saved!";

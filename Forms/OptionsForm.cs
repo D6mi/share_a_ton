@@ -39,6 +39,12 @@ namespace Share_a_Ton.Forms
         public string DownloadFolderPath { get; private set; }
 
         /// <summary>
+        /// Determines whether the Transfer Overview will be automatically closed after 1.5 seconds after
+        /// the transfer completes, allowing the next transfer to start automatically.
+        /// </summary>
+        public bool AutoFadeOut { get; private set; }
+
+        /// <summary>
         /// Setup the initial state of the controls on the form according to the values in
         /// the settings file.
         /// </summary>
@@ -53,6 +59,7 @@ namespace Share_a_Ton.Forms
             ConfirmationNeeded = Settings.Default.ConfirmationNeeded;
             AskForDownloadFolder = Settings.Default.AskToOpenDownloadFolderOnTransfer;
             AutoOpenDownloadFolder = Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer;
+            AutoFadeOut = Settings.Default.AutoFadeOut;
 
             usernameTextBox.Text = Username;
             usernameTextBox.MaxLength = MaxNumberOfCharacters;
@@ -60,6 +67,7 @@ namespace Share_a_Ton.Forms
             confirmationCheckBox.Checked = ConfirmationNeeded;
             askForDownloadFolderCheckBox.Checked = AskForDownloadFolder;
             autoOpenDownloadFolderCheckBox.Checked = AutoOpenDownloadFolder;
+            autoFadeOutCheckBox.Checked = AutoFadeOut;
 
             if (CanClose())
             {
@@ -92,6 +100,7 @@ namespace Share_a_Ton.Forms
             Settings.Default.ConfirmationNeeded = ConfirmationNeeded;
             Settings.Default.AskToOpenDownloadFolderOnTransfer = AskForDownloadFolder;
             Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer = AutoOpenDownloadFolder;
+            Settings.Default.AutoFadeOut = AutoFadeOut;
             Settings.Default.Save();
 
             Options.Username = Username;
@@ -160,6 +169,11 @@ namespace Share_a_Ton.Forms
                 AskForDownloadFolder = false;
                 askForDownloadFolderCheckBox.Checked = false;
             }
+        }
+
+        private void fadeOutCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            AutoFadeOut = autoFadeOutCheckBox.Checked;
         }
 
         private void okButton_Click(object sender, EventArgs e)

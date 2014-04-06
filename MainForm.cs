@@ -40,7 +40,7 @@ namespace Share_a_Ton
 
             if (String.IsNullOrWhiteSpace(path))
             {
-                MessageBox.Show("Please choose a folder to which all of you're files will be saved!");
+                MessageBox.Show(Constants.ChooseFileString);
 
                 var fileBrowserDialog = new FolderBrowserDialog();
 
@@ -78,7 +78,8 @@ namespace Share_a_Ton
         }
 
         public IPAddress MyAddress { get; private set; }
-        private IPEndPoint LocalIpEndPoint { get; set; }
+        public IPEndPoint LocalIpEndPoint { get; set; }
+
 
         #region Cross-thread Method Invocation
 
@@ -157,12 +158,7 @@ namespace Share_a_Ton
         private void optionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var options = new OptionsForm();
-            DialogResult dr = options.ShowDialog(this);
-
-            if (DialogResult.OK == dr)
-            {
-                _tcpManager.UpdateDownloadPath(options.DownloadFolderPath);
-            }
+            options.ShowDialog(this);
         }
 
         private void listOfPcs_SelectedIndexChanged(object sender, EventArgs e)
@@ -199,7 +195,7 @@ namespace Share_a_Ton
                 if (paths.Length > 1)
                 {
                     statusLabel.ForeColor = Constants.ErrorColor;
-                    statusLabel.Text = "Please drag one file at a time!";
+                    statusLabel.Text = Constants.MultipleFilesDraggedErrorString;
                 }
                 else
                 {
@@ -212,20 +208,12 @@ namespace Share_a_Ton
                     if ((info.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         statusLabel.ForeColor = Constants.ErrorColor;
-                        statusLabel.Text = "You've chosen a directory, please only drag and drop files!";
+                        statusLabel.Text = Constants.DirectoryDraggedErrorString;
                     }
                         
                         // Everything's good, we got a valid file.
                     else
                     {
-                        statusLabel.ForeColor = Constants.SuccessColor;
-                        statusLabel.Text = String.Format("You've chosen {0}", info.Name.ToUpperInvariant());
-
-                        // Set a tool tip on the status label, with data regarding the file.
-                        fileDataToolTip.ToolTipTitle = "File info : ";
-                        fileDataToolTip.SetToolTip(statusLabel,
-                            String.Format("Name : {0} Size : {1} mb", info.Name, info.Length/1000000));
-
                         // Get the mouse coordinates relative to the control (ListView).
                         var point = listOfPcs.PointToClient(new Point(e.X, e.Y));
 
@@ -249,7 +237,7 @@ namespace Share_a_Ton
                         else
                         {
                             statusLabel.ForeColor = Constants.ErrorColor;
-                            statusLabel.Text = "You need to drop the file on one of the computers in the LAN list!";
+                            statusLabel.Text = Constants.DragLocationErrorString;
                         }
 
                         // Initiate the transfer.
@@ -263,7 +251,7 @@ namespace Share_a_Ton
             e.Effect = DragDropEffects.Copy;
 
             statusLabel.ForeColor = Constants.WarningColor;
-            statusLabel.Text = "Drop the file on the LAN Pc you want to send the file to!";
+            statusLabel.Text =  Constants.DragTipString;
         }
 
 

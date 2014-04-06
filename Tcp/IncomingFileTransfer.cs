@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
-using Share_a_Ton.Forms;
 using Share_a_Ton.Utilities;
 
 namespace Share_a_Ton.Tcp
@@ -12,7 +11,7 @@ namespace Share_a_Ton.Tcp
     public class IncomingFileTransfer : Transfer
     {
         private byte[] _buffer;
-        private NetworkStream _networkStream;
+        private readonly NetworkStream _networkStream;
         
         private bool _transferError;
         private bool _transferSuccess;
@@ -22,6 +21,8 @@ namespace Share_a_Ton.Tcp
             : base(client, sender, ipEndPoint, path, filename, fileLength, bufferSize)
         {
             _buffer = new byte[BufferSize];
+            _transferSuccess = false;
+            _transferError = false;
 
             Client = client;
             _networkStream = client.GetStream();
@@ -34,7 +35,7 @@ namespace Share_a_Ton.Tcp
                 using (var fileStream = new FileStream(Path, FileMode.Create))
                 {
                     OnTransferStarted(EventArgs.Empty);
-                    long remaining = FileLength;
+                    var remaining = FileLength;
 
                     while (remaining > 0)
                     {
@@ -48,13 +49,9 @@ namespace Share_a_Ton.Tcp
 
                         if (IsClientDisconnected(Client.Client))
                         {
-                            var notification = new Notification("Transfer interrupted",
-                                "The client has terminated the transfer");
-                            notification.Show();
-
+                            OnTransferDisconnected(EventArgs.Empty);
                             _transferError = true;
-
-                            throw new Exception("The client has terminated the connection!");
+                            break;
                         }
                     }
                 }
@@ -62,14 +59,16 @@ namespace Share_a_Ton.Tcp
                 if (File.Exists(Path) && !_transferError)
                 {
                     _transferSuccess = true;
-                    byte[] successBytes = Message.ConvertCommandToBytes(Commands.Success);
+                    var successBytes = Message.ConvertCommandToBytes(Commands.Success);
                     _networkStream.Write(successBytes, 0, successBytes.Length);
                     OnTransferCompleted(EventArgs.Empty);
                 }
                 else
                 {
-                    byte[] errorBytes = Message.ConvertCommandToBytes(Commands.Success);
+                    var errorBytes = Message.ConvertCommandToBytes(Commands.Error);
                     _networkStream.Write(errorBytes, 0, errorBytes.Length);
+
+                    PerformCleanupOnDisconnect();
                 }
 
                 // If the file was successfully transfered, send the Success message notifying the client that
@@ -78,8 +77,7 @@ namespace Share_a_Ton.Tcp
                 {
                     if (Options.AskForDownloadFolder)
                     {
-                        var dr =
-                            MessageBox.Show("Do you want to open the directory where the file was saved?",
+                        var dr = MessageBox.Show("Do you want to open the directory where the file was saved?",
                                 "Confirmation", MessageBoxButtons.OKCancel);
                         if (dr == DialogResult.OK)
                             Process.Start("explorer", Options.DownloadFolderPath);
@@ -92,7 +90,7 @@ namespace Share_a_Ton.Tcp
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Debug.WriteLine(ex.ToString());
             }
             finally
             {
@@ -103,7 +101,15 @@ namespace Share_a_Ton.Tcp
 
         public override void Abort()
         {
+            Client.Close();
+        }
 
+        private void PerformCleanupOnDisconnect()
+        {
+            if (File.Exists(Path))
+            {
+                File.Delete(Path);
+            }
         }
 
         private static bool IsClientDisconnected(Socket clientSocket)

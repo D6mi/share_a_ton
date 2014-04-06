@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.panel2 = new System.Windows.Forms.Panel();
             this.clientGroupBox = new System.Windows.Forms.GroupBox();
             this.ipAddressLabel = new System.Windows.Forms.Label();
             this.clientNameLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.lanGroupBox = new System.Windows.Forms.GroupBox();
             this.listOfPcs = new System.Windows.Forms.ListView();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,8 +42,6 @@
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileDataToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.statusLabel = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.clientGroupBox.SuspendLayout();
             this.lanGroupBox.SuspendLayout();
@@ -113,6 +111,14 @@
             this.label1.Size = new System.Drawing.Size(50, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name : ";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.statusLabel.Location = new System.Drawing.Point(12, 231);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(477, 28);
+            this.statusLabel.TabIndex = 4;
             // 
             // lanGroupBox
             // 
@@ -187,18 +193,6 @@
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
-            // fileDataToolTip
-            // 
-            this.fileDataToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.statusLabel.Location = new System.Drawing.Point(12, 231);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(477, 28);
-            this.statusLabel.TabIndex = 4;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,7 +230,6 @@
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionToolStripMenuItem;
         private System.Windows.Forms.GroupBox clientGroupBox;
-        private System.Windows.Forms.ToolTip fileDataToolTip;
         private System.Windows.Forms.Label ipAddressLabel;
         private System.Windows.Forms.Label clientNameLabel;
         private System.Windows.Forms.Label label3;

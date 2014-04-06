@@ -127,7 +127,7 @@
             this.actionButton.TabIndex = 2;
             this.actionButton.Text = "Cancel transfer";
             this.actionButton.UseVisualStyleBackColor = true;
-            this.actionButton.Click += new System.EventHandler(this.button1_Click);
+            this.actionButton.Click += new System.EventHandler(this.actionButton_Click);
             // 
             // statusLabel
             // 
@@ -147,9 +147,14 @@
             this.Controls.Add(this.actionButton);
             this.Controls.Add(this.transferProgress);
             this.Controls.Add(this.groupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TransferView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Overview";
+            this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TransferView_FormClosing);
             this.groupBox.ResumeLayout(false);
             this.groupBox.PerformLayout();
             this.ResumeLayout(false);

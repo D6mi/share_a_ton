@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using Share_a_Ton.Tcp;
 using Share_a_Ton.Utilities;
+using Timer = System.Threading.Timer;
 
 namespace Share_a_Ton.Forms
 {
     public partial class TransferView : Form
     {
         private readonly Transfer _transfer;
+        private Timer _fadeOutTimer;
         private bool _isRunning;
+        
 
         public TransferView(Transfer transfer)
         {
             InitializeComponent();
-
+            
             _transfer = transfer;
 
             transferProgress.Minimum = 0;
@@ -51,42 +55,50 @@ namespace Share_a_Ton.Forms
 
         public void TransferConnected(object sender, EventArgs e)
         {
-            SetText("Connected...");
+            SetTextWithColor("Connected!", Constants.SuccessColor);
             _isRunning = true;
         }
 
         public void TransferDisconnected(object sender, EventArgs e)
         {
-            SetText("Transfer rejected...");
+            SetTextWithColor("Transfer terminated!", Constants.ErrorColor);
 
             SetButtonText("Okay");
             _isRunning = false;
+
+            if(Options.AutoFadeOut)
+                _fadeOutTimer = new Timer(ForceClose, null, TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(-1));
         }
 
         public void TransferStarted(object sender, EventArgs e)
         {
-            SetText("Transfer started...");
+            SetTextWithColor("Transfer started!", Constants.SuccessColor);
             _isRunning = false;
         }
 
         public void TransferCompleted(object sender, EventArgs e)
         {
-            SetText("Transfer completed!");
+            SetTextWithColor("Transfer completed!", Constants.SuccessColor);
 
             SetButtonText("Close");
             _isRunning = false;
+
+            if (Options.AutoFadeOut)
+                _fadeOutTimer = new Timer(ForceClose, null, TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(-1));
         }
 
         public void TransferredPart(object sender, EventArgs e)
         {
             var args = (TransferArgs) e;
-            int value = args.BytesTransfered;
+            var value = args.BytesTransfered;
+
+            SetTextWithColor("Transferring data...", Constants.WarningColor);
             SetProgress(value);
         }
 
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void actionButton_Click(object sender, EventArgs e)
         {
             if (_isRunning)
             {
@@ -98,7 +110,12 @@ namespace Share_a_Ton.Forms
                 Close();
         }
 
-        private void SetText(string text)
+        private void TransferView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FadeOut();
+        }
+
+        private void SetText(String text)
         {
             if (statusLabel.InvokeRequired)
             {
@@ -107,6 +124,20 @@ namespace Share_a_Ton.Forms
             }
             else
             {
+                statusLabel.Text = text;
+            }
+        }
+
+        private void SetTextWithColor(String text, Color color)
+        {
+            if (statusLabel.InvokeRequired)
+            {
+                SetTextWithColorCallback textWithColorback = SetTextWithColor;
+                Invoke(textWithColorback, new object[] { text, color });
+            }
+            else
+            {
+                statusLabel.ForeColor = color;
                 statusLabel.Text = text;
             }
         }
@@ -124,7 +155,7 @@ namespace Share_a_Ton.Forms
 
                 if (TaskbarManager.IsPlatformSupported)
                 {
-                    TaskbarManager taskbarInstance = TaskbarManager.Instance;
+                    var taskbarInstance = TaskbarManager.Instance;
 
                     taskbarInstance.SetProgressState(TaskbarProgressBarState.Normal);
                     taskbarInstance.SetProgressValue(value, 100);
@@ -134,7 +165,7 @@ namespace Share_a_Ton.Forms
             }
         }
 
-        private void SetButtonText(string text)
+        private void SetButtonText(String text)
         {
             if (actionButton.InvokeRequired)
             {
@@ -147,29 +178,55 @@ namespace Share_a_Ton.Forms
             }
         }
 
+        private void ForceClose(object nevermind)
+        {
+            if (InvokeRequired)
+            {
+                CloseCallback closeCallback = ForceClose;
+                Invoke(closeCallback, new object[] { " " });
+            }
+            else
+            {
+                Close();
+            }
+        }
+
         private void FormatFileLengthLabel()
         {
             decimal fileLength = _transfer.FileLength;
 
-            if (fileLength < Constants.KiloByteTreshold)
+            if (fileLength < Constants.MegaByteTreshold)
             {
-                filelengthLabel.Text = (fileLength/1000).ToString("F") + " kb";
+                filelengthLabel.Text = (fileLength/Constants.KiloByteTreshold).ToString("F") + " kb";
             }
-            else if (fileLength < Constants.MegaByteTreshold)
+            else if (fileLength < Constants.GigaByteTreshold)
             {
-                filelengthLabel.Text = (fileLength/1000000).ToString("F") + " mb";
+                filelengthLabel.Text = (fileLength/Constants.MegaByteTreshold).ToString("F") + " mb";
             }
-            else if (fileLength > Constants.MegaByteTreshold)
+            else if (fileLength > Constants.GigaByteTreshold)
             {
-                filelengthLabel.Text = (fileLength/1000000000).ToString("F") + " gb";
+                filelengthLabel.Text = (fileLength/Constants.GigaByteTreshold).ToString("F") + " gb";
             }
         }
 
+        public void FadeOut()
+        {
+            for (var fadeOut = 1.1; fadeOut > 0; fadeOut -= 0.1)
+            {
+                Opacity = fadeOut;
+                Refresh();
+                Thread.Sleep(70);
+            }
+        }
 
-        private delegate void SetButtonTextCallback(string text);
+        private delegate void CloseCallback(object nevermind);
+
+        private delegate void SetButtonTextCallback(String text);
 
         private delegate void SetProgressCallback(int value);
 
-        private delegate void SetTextCallback(string text);
+        private delegate void SetTextCallback(String text);
+
+        private delegate void SetTextWithColorCallback(String text, Color color);
     }
 }

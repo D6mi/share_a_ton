@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ConfirmationNeeded" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AutomaticallyOpenDownloadFolderOnTransfer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -19,6 +19,9 @@
     </Setting>
     <Setting Name="FirstTimeSetupPerformed" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoFadeOut" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
