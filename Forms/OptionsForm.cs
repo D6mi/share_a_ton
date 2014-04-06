@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Net;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Share_a_Ton.Properties;
 using Share_a_Ton.Utilities;
 
@@ -7,6 +10,10 @@ namespace Share_a_Ton.Forms
 {
     public partial class OptionsForm : Form
     {
+        private const int MaxNumberOfCharacters = 10;
+        private bool _firstTimeSetup;
+        private bool _checkFlag = false;
+
         /// <summary>
         /// The name by which this PC will be known.
         /// </summary>
@@ -42,6 +49,8 @@ namespace Share_a_Ton.Forms
         {
             InitializeComponent();
 
+            _firstTimeSetup = Settings.Default.FirstTimeSetupPerformed;
+
             Username = Settings.Default.Username;
             DownloadFolderPath = Settings.Default.DownloadFolder;
             ConfirmationNeeded = Settings.Default.ConfirmationNeeded;
@@ -49,10 +58,60 @@ namespace Share_a_Ton.Forms
             AutoOpenDownloadFolder = Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer;
 
             usernameTextBox.Text = Username;
+            usernameTextBox.MaxLength = MaxNumberOfCharacters;
             downloadFolderTextBox.Text = DownloadFolderPath;
             confirmationCheckBox.Checked = ConfirmationNeeded;
             askForDownloadFolderCheckBox.Checked = AskForDownloadFolder;
             autoOpenDownloadFolderCheckBox.Checked = AutoOpenDownloadFolder;
+
+            if (CanClose())
+            {
+                okButton.Enabled = true;
+                statusLabel.Text = "";
+            }
+            else
+            {
+                okButton.Enabled = false;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+            }
+        }
+
+        /// <summary>
+        /// Save the settings to the Settings file. This method does not check if the values have changed in
+        //  relation to the already saved Settings, it just overrides the Settings file with the latest values
+        //  regardless if there has been a change.
+        /// </summary>
+        public void ApplySettings()
+        {
+            if (!String.IsNullOrWhiteSpace(Username))
+                Settings.Default.Username = Username;
+            else
+            {
+                Username = Dns.GetHostName();
+                Settings.Default.Username = Username;
+            }
+
+            Settings.Default.DownloadFolder = DownloadFolderPath;
+            Settings.Default.ConfirmationNeeded = ConfirmationNeeded;
+            Settings.Default.AskToOpenDownloadFolderOnTransfer = AskForDownloadFolder;
+            Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer = AutoOpenDownloadFolder;
+            Settings.Default.Save();
+
+            Options.Username = Username;
+            Options.DownloadFolderPath = DownloadFolderPath;
+            Options.ConfirmationNeeded = ConfirmationNeeded;
+            Options.AutoOpenDownloadFolder = AutoOpenDownloadFolder;
+            Options.AskForDownloadFolder = AskForDownloadFolder;
+        }
+
+        /// <summary>
+        /// Checks whether all of the necessary fields [Username, DownloadFolderPath] are properly set.
+        /// </summary>
+        /// <returns>True if the form can return or false if all of the necessary fields are not properly set.</returns>
+        private bool CanClose()
+        {
+            return !String.IsNullOrWhiteSpace(usernameTextBox.Text) &&
+                   !String.IsNullOrWhiteSpace(downloadFolderTextBox.Text);
         }
 
         // Update the "_confirmationNeeded" variable when the state of the CheckBox changes.
@@ -65,33 +124,23 @@ namespace Share_a_Ton.Forms
         private void changeButton_Click(object sender, EventArgs e)
         {
             var fileBrowserDialog = new FolderBrowserDialog();
-            DialogResult dr = fileBrowserDialog.ShowDialog(this);
+            var dr = fileBrowserDialog.ShowDialog(this);
             if (DialogResult.OK == dr)
             {
                 DownloadFolderPath = fileBrowserDialog.SelectedPath + "\\";
                 downloadFolderTextBox.Text = DownloadFolderPath;
             }
-        }
 
-        /// <summary>
-        /// Save the settings to the Settings file. This method does not check if the values have changed in
-        //  relation to the already saved Settings, it just overrides the Settings file with the latest values
-        //  regardless if there has been a change.
-        /// </summary>
-        public void ApplySettings()
-        {
-            Settings.Default.Username = Username;
-            Settings.Default.DownloadFolder = DownloadFolderPath;
-            Settings.Default.ConfirmationNeeded = ConfirmationNeeded;
-            Settings.Default.AskToOpenDownloadFolderOnTransfer = AskForDownloadFolder;
-            Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer = AutoOpenDownloadFolder;
-            Settings.Default.Save();
-
-            Options.Username = Username;
-            Options.DownloadFolderPath = DownloadFolderPath;
-            Options.ConfirmationNeeded = ConfirmationNeeded;
-            Options.AutoOpenDownloadFolder = AutoOpenDownloadFolder;
-            Options.AskForDownloadFolder = AskForDownloadFolder;
+            if (CanClose())
+            {
+                okButton.Enabled = true;
+                statusLabel.Text = "";
+            }
+            else
+            {
+                okButton.Enabled = false;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+            }
         }
 
         private void askForDownloadFolderCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -119,6 +168,50 @@ namespace Share_a_Ton.Forms
         private void okButton_Click(object sender, EventArgs e)
         {
             Username = usernameTextBox.Text;
+            ApplySettings();
+        }
+
+        private void openDownloadFolder_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", DownloadFolderPath);
+        }
+
+        private void usernameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (usernameTextBox.Text.Length == MaxNumberOfCharacters)
+            {
+                usernameErrorLabel.ForeColor = Constants.ErrorColor;
+                usernameErrorLabel.Text = String.Format("Maximum number of characters is {0}!", MaxNumberOfCharacters);
+            }
+            else
+            {
+                usernameErrorLabel.Text = "";
+            }
+
+            if (CanClose())
+            {
+                okButton.Enabled = true;
+                statusLabel.Text = "";
+            }
+            else
+            {
+                okButton.Enabled = false;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+            }
+        }
+
+        private void downloadFolderTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (CanClose())
+            {
+                okButton.Enabled = true;
+                statusLabel.Text = "";
+            }
+            else
+            {
+                okButton.Enabled = false;
+                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderError;
+            }
         }
     }
 }

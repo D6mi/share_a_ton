@@ -19,17 +19,24 @@ namespace Share_a_Ton
         private readonly TcpManager _tcpManager;
         private readonly UdpManager _udpManager;
 
+        private ListViewItem _lastDraggedOverItem;
+
         public MainForm()
         {
             InitializeComponent();
 
             #region Initial Setup
 
-            String username = Dns.GetHostName();
-            Settings.Default.Username = username;
-            Settings.Default.Save();
+            var usernameFromSettings = Settings.Default.Username;
 
-            String path = Settings.Default.DownloadFolder;
+            if (String.IsNullOrWhiteSpace(usernameFromSettings))
+            {
+                var username = Dns.GetHostName();
+                Settings.Default.Username = username;
+                Settings.Default.Save();
+            }
+
+            var path = Settings.Default.DownloadFolder;
 
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -145,8 +152,6 @@ namespace Share_a_Ton
         {
             var shutdownData = new UdpData(UdpCommand.Remove, Options.Username);
             _udpManager.Broadcast(shutdownData);
-
-            MessageBox.Show("Sent shutdown broadcast!");
         }
 
         private void optionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -156,7 +161,6 @@ namespace Share_a_Ton
 
             if (DialogResult.OK == dr)
             {
-                options.ApplySettings();
                 _tcpManager.UpdateDownloadPath(options.DownloadFolderPath);
             }
         }
@@ -200,9 +204,8 @@ namespace Share_a_Ton
                 else
                 {
                     // Get the path of the dropped file.
-                    String path = paths[0];
-                    var info = new FileInfo(path);
-                    info.IsReadOnly = false;
+                    var path = paths[0];
+                    var info = new FileInfo(path) { IsReadOnly = false };
                     info.Refresh();
 
                     // Check if the dropped file's a directory/folder.
@@ -224,10 +227,10 @@ namespace Share_a_Ton
                             String.Format("Name : {0} Size : {1} mb", info.Name, info.Length/1000000));
 
                         // Get the mouse coordinates relative to the control (ListView).
-                        Point point = listOfPcs.PointToClient(new Point(e.X, e.Y));
+                        var point = listOfPcs.PointToClient(new Point(e.X, e.Y));
 
                         // Get the ListViewItem on which the file was dropped.
-                        ListViewItem item = listOfPcs.GetItemAt(point.X, point.Y);
+                        var item = listOfPcs.GetItemAt(point.X, point.Y);
 
                         if (item != null)
                         {
@@ -263,8 +266,27 @@ namespace Share_a_Ton
             statusLabel.Text = "Drop the file on the LAN Pc you want to send the file to!";
         }
 
+
+        private void listOfPcs_DragOver(object sender, DragEventArgs e)
+        {
+            var point = PointToClient(new Point(e.X, e.Y));
+            var item = listOfPcs.GetItemAt(point.X, point.Y);
+
+            if (item != null)
+            {
+                _lastDraggedOverItem = item;
+                item.BackColor = Color.LightGreen;
+            }
+
+            if (item == null && _lastDraggedOverItem != null)
+            {
+                _lastDraggedOverItem.BackColor = DefaultBackColor;
+            }
+        }
+
         #endregion
 
         private delegate void AddRemoveCallback(ClientInfo client);
+
     }
 }

@@ -82,5 +82,17 @@ namespace Share_a_Ton.Properties {
                 this["Username"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FirstTimeSetupPerformed {
+            get {
+                return ((bool)(this["FirstTimeSetupPerformed"]));
+            }
+            set {
+                this["FirstTimeSetupPerformed"] = value;
+            }
+        }
     }
 }

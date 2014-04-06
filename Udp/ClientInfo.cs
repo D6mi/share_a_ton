@@ -27,8 +27,7 @@ namespace Share_a_Ton.Udp
 
             var client = (ClientInfo)obj;
 
-            if (ClientName == client.ClientName &&
-                IpEndPoint.Address.ToString() == client.IpEndPoint.Address.ToString())
+            if (IpEndPoint.Address.ToString() == client.IpEndPoint.Address.ToString())
                 return true;
 
             return false;

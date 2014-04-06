@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.usernameErrorLabel = new System.Windows.Forms.Label();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.autoOpenDownloadFolderCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -42,9 +45,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.usernameTextBox = new System.Windows.Forms.TextBox();
-            this.usernameErrorLabel = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +66,33 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // usernameErrorLabel
+            // 
+            this.usernameErrorLabel.AutoSize = true;
+            this.usernameErrorLabel.ForeColor = System.Drawing.Color.Red;
+            this.usernameErrorLabel.Location = new System.Drawing.Point(235, 28);
+            this.usernameErrorLabel.Name = "usernameErrorLabel";
+            this.usernameErrorLabel.Size = new System.Drawing.Size(0, 13);
+            this.usernameErrorLabel.TabIndex = 9;
+            // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(103, 25);
+            this.usernameTextBox.MaxLength = 10;
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(126, 20);
+            this.usernameTextBox.TabIndex = 8;
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.usernameTextBox_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(44, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Name : ";
             // 
             // groupBox2
             // 
@@ -146,6 +174,7 @@
             this.openDownloadFolder.TabIndex = 5;
             this.openDownloadFolder.Text = "Download Folder";
             this.openDownloadFolder.UseVisualStyleBackColor = true;
+            this.openDownloadFolder.Click += new System.EventHandler(this.openDownloadFolder_Click);
             // 
             // changeButton
             // 
@@ -164,6 +193,7 @@
             this.downloadFolderTextBox.Name = "downloadFolderTextBox";
             this.downloadFolderTextBox.Size = new System.Drawing.Size(307, 20);
             this.downloadFolderTextBox.TabIndex = 1;
+            this.downloadFolderTextBox.TextChanged += new System.EventHandler(this.downloadFolderTextBox_TextChanged);
             // 
             // label2
             // 
@@ -187,7 +217,7 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(258, 237);
+            this.okButton.Location = new System.Drawing.Point(272, 237);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -195,36 +225,21 @@
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // label5
+            // statusLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 28);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Name : ";
-            // 
-            // usernameTextBox
-            // 
-            this.usernameTextBox.Location = new System.Drawing.Point(103, 25);
-            this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(164, 20);
-            this.usernameTextBox.TabIndex = 8;
-            // 
-            // usernameErrorLabel
-            // 
-            this.usernameErrorLabel.AutoSize = true;
-            this.usernameErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.usernameErrorLabel.Location = new System.Drawing.Point(273, 28);
-            this.usernameErrorLabel.Name = "usernameErrorLabel";
-            this.usernameErrorLabel.Size = new System.Drawing.Size(0, 13);
-            this.usernameErrorLabel.TabIndex = 9;
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.ForeColor = System.Drawing.Color.Red;
+            this.statusLabel.Location = new System.Drawing.Point(12, 242);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(0, 13);
+            this.statusLabel.TabIndex = 4;
             // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(440, 269);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.groupBox1);
@@ -239,6 +254,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -261,5 +277,6 @@
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label usernameErrorLabel;
+        private System.Windows.Forms.Label statusLabel;
     }
 }

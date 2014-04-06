@@ -35,7 +35,6 @@
             this.clientNameLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.statusLabel = new System.Windows.Forms.Label();
             this.lanGroupBox = new System.Windows.Forms.GroupBox();
             this.listOfPcs = new System.Windows.Forms.ListView();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,6 +43,7 @@
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileDataToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.statusLabel = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.clientGroupBox.SuspendLayout();
             this.lanGroupBox.SuspendLayout();
@@ -59,7 +59,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 24);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(523, 307);
+            this.panel2.Size = new System.Drawing.Size(523, 252);
             this.panel2.TabIndex = 5;
             // 
             // clientGroupBox
@@ -80,7 +80,7 @@
             // 
             this.ipAddressLabel.AutoSize = true;
             this.ipAddressLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.ipAddressLabel.Location = new System.Drawing.Point(117, 65);
+            this.ipAddressLabel.Location = new System.Drawing.Point(88, 65);
             this.ipAddressLabel.Name = "ipAddressLabel";
             this.ipAddressLabel.Size = new System.Drawing.Size(0, 15);
             this.ipAddressLabel.TabIndex = 4;
@@ -89,7 +89,7 @@
             // 
             this.clientNameLabel.AutoSize = true;
             this.clientNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.clientNameLabel.Location = new System.Drawing.Point(117, 30);
+            this.clientNameLabel.Location = new System.Drawing.Point(88, 30);
             this.clientNameLabel.Name = "clientNameLabel";
             this.clientNameLabel.Size = new System.Drawing.Size(0, 15);
             this.clientNameLabel.TabIndex = 3;
@@ -100,9 +100,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label3.Location = new System.Drawing.Point(6, 65);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(73, 15);
+            this.label3.Size = new System.Drawing.Size(74, 15);
             this.label3.TabIndex = 1;
-            this.label3.Text = "Ip Address : ";
+            this.label3.Text = "IP Address : ";
             // 
             // label1
             // 
@@ -113,14 +113,6 @@
             this.label1.Size = new System.Drawing.Size(50, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name : ";
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.statusLabel.Location = new System.Drawing.Point(12, 231);
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(477, 43);
-            this.statusLabel.TabIndex = 4;
             // 
             // lanGroupBox
             // 
@@ -148,6 +140,7 @@
             this.listOfPcs.SelectedIndexChanged += new System.EventHandler(this.listOfPcs_SelectedIndexChanged);
             this.listOfPcs.DragDrop += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragDrop);
             this.listOfPcs.DragEnter += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragEnter);
+            this.listOfPcs.DragOver += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragOver);
             // 
             // label2
             // 
@@ -198,11 +191,19 @@
             // 
             this.fileDataToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // statusLabel
+            // 
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.statusLabel.Location = new System.Drawing.Point(12, 231);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(477, 28);
+            this.statusLabel.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(523, 331);
+            this.ClientSize = new System.Drawing.Size(523, 276);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.menu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -229,7 +230,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.GroupBox lanGroupBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.MenuStrip menu;
@@ -243,6 +243,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListView listOfPcs;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.Label statusLabel;
 
     }
 }

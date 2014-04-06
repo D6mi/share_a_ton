@@ -33,9 +33,6 @@ namespace Share_a_Ton.Tcp
 
                 try
                 {
-                    // Buffer for reading.
-                    var buffer = new byte[Constants.DefaultBufferSize];
-
                     TcpClient client = _listener.AcceptTcpClient();
                     NetworkStream netStream = client.GetStream();
 
@@ -45,18 +42,43 @@ namespace Share_a_Ton.Tcp
                     var message = new JSONMessage();
                     message = JsonConvert.DeserializeObject<JSONMessage>(json);
 
-                    var filename = message.Filename;
-                    var path = _downloadFolderPath + message.Filename;
-                    var fileLength = message.FileLength;
+                    string filename = message.Filename;
+                    string path = _downloadFolderPath + message.Filename;
+                    long fileLength = message.FileLength;
 
-                    // Ask the user whether he/she wants to accept the file.
-                    DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
-                        "Accept or reject?", MessageBoxButtons.OKCancel);
+                    bool confirmationNeeded = Options.ConfirmationNeeded;
 
-                    // If the user says yes, send the accept response and start accepting the file data.
-                    if (dr == DialogResult.OK)
+                    if (confirmationNeeded)
                     {
-                        // The Message class static methods for transforming commands into byte arrays.
+                        // Ask the user whether he/she wants to accept the file.
+                        DialogResult dr = MessageBox.Show("Do you want to accept this file : " + message.Filename,
+                            "Accept or reject?", MessageBoxButtons.OKCancel);
+
+                        // If the user says yes, send the accept response and start accepting the file data.
+                        if (dr == DialogResult.OK)
+                        {
+                            // The Message class static methods for transforming commands into byte arrays.
+                            byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Accept);
+
+                            // Send the accept response.
+                            netStream.Write(responseBytes, 0, responseBytes.Length);
+
+                            var transfer = new IncomingFileTransfer(client, "Sender", null, path, filename,
+                                fileLength);
+                            var tView = new TransferView(transfer);
+                            tView.ShowDialog();
+
+                            // If the user rejected the transfer, send the Reject response.
+                        }
+                        else
+                        {
+                            byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
+                            netStream.Write(responseBytes, 0, responseBytes.Length);
+                            _fileCopied = false;
+                        }
+                    }
+                    else
+                    {
                         byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Accept);
 
                         // Send the accept response.
@@ -66,56 +88,6 @@ namespace Share_a_Ton.Tcp
                             fileLength);
                         var tView = new TransferView(transfer);
                         tView.ShowDialog();
-
-                        #region Transfer Code
-
-                        /*
-                                // Open or create the file for saving.
-                                using (var fileStream = new FileStream(_path, FileMode.Create))
-                                {
-                                    long remaining = message.FileLength;
-
-                                    while (remaining > 0)
-                                    {
-                                        int bytesRead = netStream.Read(buffer, 0, Constants.DefaultBufferSize);
-                                        fileStream.Write(buffer, 0, bytesRead);
-                                        remaining -= bytesRead;
-
-                                        if (IsClientDisconnected(client.Client))
-                                        {
-                                            var notification = new Notification("Transfer interrupted",
-                                                "The client has terminated the transfer");
-                                            notification.Show();
-
-                                            _transferError = true;
-
-                                            throw new Exception("The client has terminated the connection!");
-                                        }
-                                    }
-                                }
-
-                                if (File.Exists(_path) && !_transferError)
-                                {
-                                    _fileCopied = true;
-                                    byte[] successBytes = Message.ConvertCommandToBytes(Commands.Success);
-                                    netStream.Write(successBytes, 0, successBytes.Length);
-                                }
-                                else
-                                {
-                                    byte[] errorBytes = Message.ConvertCommandToBytes(Commands.Success);
-                                    netStream.Write(errorBytes, 0, errorBytes.Length);
-                                }
-                               */
-
-                        #endregion
-
-                        // If the user rejected the transfer, send the Reject response.
-                    }
-                    else
-                    {
-                        byte[] responseBytes = Message.ConvertCommandToBytes(Commands.Reject);
-                        netStream.Write(responseBytes, 0, responseBytes.Length);
-                        _fileCopied = false;
                     }
 
                     /*
@@ -137,7 +109,6 @@ namespace Share_a_Ton.Tcp
                         }
                     }
                     */
-
                 }
                 catch (Exception ex)
                 {
