@@ -19,8 +19,6 @@ namespace Share_a_Ton
         private readonly TcpManager _tcpManager;
         private readonly UdpManager _udpManager;
 
-        private ListViewItem _lastDraggedOverItem;
-
         public MainForm()
         {
             InitializeComponent();
@@ -40,7 +38,7 @@ namespace Share_a_Ton
 
             if (String.IsNullOrWhiteSpace(path))
             {
-                MessageBox.Show(Constants.ChooseFileString);
+                MessageBox.Show(Strings.ChooseFileString);
 
                 var fileBrowserDialog = new FolderBrowserDialog();
 
@@ -195,7 +193,7 @@ namespace Share_a_Ton
                 if (paths.Length > 1)
                 {
                     statusLabel.ForeColor = Constants.ErrorColor;
-                    statusLabel.Text = Constants.MultipleFilesDraggedErrorString;
+                    statusLabel.Text = Strings.MultipleFilesDraggedErrorString;
                 }
                 else
                 {
@@ -208,10 +206,10 @@ namespace Share_a_Ton
                     if ((info.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         statusLabel.ForeColor = Constants.ErrorColor;
-                        statusLabel.Text = Constants.DirectoryDraggedErrorString;
+                        statusLabel.Text = Strings.DirectoryDraggedErrorString;
                     }
                         
-                        // Everything's good, we got a valid file.
+                    // Everything's good, we got a valid file.
                     else
                     {
                         // Get the mouse coordinates relative to the control (ListView).
@@ -237,10 +235,10 @@ namespace Share_a_Ton
                         else
                         {
                             statusLabel.ForeColor = Constants.ErrorColor;
-                            statusLabel.Text = Constants.DragLocationErrorString;
+                            statusLabel.Text = Strings.DragLocationErrorString;
                         }
 
-                        // Initiate the transfer.
+                        statusLabel.Text = "";
                     }
                 }
             }
@@ -251,25 +249,12 @@ namespace Share_a_Ton
             e.Effect = DragDropEffects.Copy;
 
             statusLabel.ForeColor = Constants.WarningColor;
-            statusLabel.Text =  Constants.DragTipString;
+            statusLabel.Text = Strings.DragTipString;
         }
 
-
-        private void listOfPcs_DragOver(object sender, DragEventArgs e)
+        private void listOfPcs_DragLeave(object sender, EventArgs e)
         {
-            var point = PointToClient(new Point(e.X, e.Y));
-            var item = listOfPcs.GetItemAt(point.X, point.Y);
-
-            if (item != null)
-            {
-                _lastDraggedOverItem = item;
-                item.BackColor = Color.LightGreen;
-            }
-
-            if (item == null && _lastDraggedOverItem != null)
-            {
-                _lastDraggedOverItem.BackColor = DefaultBackColor;
-            }
+            statusLabel.Text = String.Empty;
         }
 
         #endregion

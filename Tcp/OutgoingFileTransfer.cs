@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -14,11 +15,10 @@ namespace Share_a_Ton.Tcp
             long fileLength, int bufferSize = short.MaxValue)
             : base(client, sender, ipEndPoint, path, filename, fileLength, bufferSize)
         {
-            
         }
 
         /// <summary>
-        /// Starts sending the associated file to the specified host.
+        ///     Starts sending the associated file to the specified host.
         /// </summary>
         public override void Start()
         {
@@ -30,76 +30,75 @@ namespace Share_a_Ton.Tcp
 
                 OnTransferConnected(EventArgs.Empty);
 
-                using (NetworkStream networkStream = Client.GetStream())
+                NetworkStream = Client.GetStream();
+                var jsonMessage = new JSONMessage
                 {
-                    var jsonMessage = new JSONMessage()
+                    Command = Commands.Send,
+                    FileLength = FileLength,
+                    Filename = Filename,
+                    Sender = "D6mi-PC"
+                };
+
+                var json = JsonConvert.SerializeObject(jsonMessage);
+
+                var writer = new StreamWriter(NetworkStream) {AutoFlush = true};
+                writer.WriteLine(json);
+
+                NetworkStream.Read(buffer, 0, buffer.Length);
+
+                var command = Message.ConvertBytesToCommand(buffer);
+
+                // Determine the appropriate action based on the command contents.
+                if (command == Commands.Accept)
+                {
+                    // Open the chosen file for reading. "_path" holds the user specified path.
+                    using (var fileStream = new FileStream(Path, FileMode.Open))
                     {
-                        Command = Commands.Send,
-                        FileLength = FileLength,
-                        Filename = Filename,
-                        Sender = "D6mi-PC"
-                    };
-
-                    string json = JsonConvert.SerializeObject(jsonMessage);
-
-                    var writer = new StreamWriter(networkStream) { AutoFlush = true };
-                    writer.WriteLine(json);
-
-                    networkStream.Read(buffer, 0, buffer.Length);
-
-                    Commands command = Message.ConvertBytesToCommand(buffer);
-
-                    // Determine the appropriate action based on the command contents.
-                    if (command == Commands.Accept)
-                    {
-                        // Open the chosen file for reading. "_path" holds the user specified path.
-                        using (var fileStream = new FileStream(Path, FileMode.Open))
+                        OnTransferStarted(EventArgs.Empty);
+                        int bytesRead;
+                        while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            OnTransferStarted(EventArgs.Empty);
-                            int bytesRead;
-                            while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                decimal ratio = (decimal) BytesTransferred/FileLength;
-                                ratio = ratio*1000;
-                                networkStream.Write(buffer, 0, bytesRead);
-                                BytesTransferred += bytesRead;
+                            var ratio = (decimal) BytesTransferred/FileLength;
+                            ratio = ratio*1000;
+                            NetworkStream.Write(buffer, 0, bytesRead);
+                            BytesTransferred += bytesRead;
 
-                                OnTransferredChunk(new TransferArgs((int) ratio));
-                            }
-                        }
-
-                        // Wait for the [Success] or [Error] response.
-                        networkStream.Read(buffer, 0, 4);
-
-                        // Convert the bytes received to a command.
-                        command = Message.ConvertBytesToCommand(buffer);
-
-                        // Act appropriately.
-                        if (command == Commands.Success)
-                        {
-                            OnTransferCompleted(EventArgs.Empty);
+                            OnTransferredChunk(new TransferArgs((int) ratio));
                         }
                     }
-                    else if (command == Commands.Reject)
+
+                    // Wait for the [Success] or [Error] response.
+                    NetworkStream.Read(buffer, 0, 4);
+
+                    // Convert the bytes received to a command.
+                    command = Message.ConvertBytesToCommand(buffer);
+
+                    // Act appropriately.
+                    if (command == Commands.Success)
                     {
-                        OnTransferDisconnected(EventArgs.Empty);
+                        OnTransferCompleted(EventArgs.Empty);
                     }
                 }
+                else if (command == Commands.Reject)
+                {
+                    OnTransferRejected(EventArgs.Empty);
+                }
+
             }
-            catch (SocketException sEx)
+            catch (ObjectDisposedException ex)
             {
-                if (sEx.SocketErrorCode == SocketError.ConnectionAborted)
-                {
-                    OnTransferDisconnected(EventArgs.Empty);
-                }
+                Debug.Write("Exception : ");
+                Debug.WriteLine(ex.ToString());
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Debug.Write("Exception : ");
+                Debug.WriteLine(ex.ToString());
             }
             finally
             {
                 Client.Close();
+                NetworkStream.Close();
             }
         }
 

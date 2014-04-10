@@ -77,7 +77,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
+                statusLabel.Text = Strings.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -145,7 +145,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
+                statusLabel.Text = Strings.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -207,7 +207,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
+                statusLabel.Text = Strings.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 
@@ -221,7 +221,7 @@ namespace Share_a_Ton.Forms
             else
             {
                 okButton.Enabled = false;
-                statusLabel.Text = Constants.OptionsUsernameOrDownloadFolderErrorString;
+                statusLabel.Text = Strings.OptionsUsernameOrDownloadFolderErrorString;
             }
         }
 

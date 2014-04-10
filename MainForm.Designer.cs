@@ -146,7 +146,7 @@
             this.listOfPcs.SelectedIndexChanged += new System.EventHandler(this.listOfPcs_SelectedIndexChanged);
             this.listOfPcs.DragDrop += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragDrop);
             this.listOfPcs.DragEnter += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragEnter);
-            this.listOfPcs.DragOver += new System.Windows.Forms.DragEventHandler(this.listOfPcs_DragOver);
+            this.listOfPcs.DragLeave += new System.EventHandler(this.listOfPcs_DragLeave);
             // 
             // label2
             // 

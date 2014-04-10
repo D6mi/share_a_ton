@@ -10,11 +10,11 @@ namespace Share_a_Ton.Tcp
 {
     public class IncomingFileTransfer : Transfer
     {
-        private byte[] _buffer;
-        private readonly NetworkStream _networkStream;
+        private readonly byte[] _buffer;
         
         private bool _transferError;
         private bool _transferSuccess;
+
 
         public IncomingFileTransfer(TcpClient client, string sender, IPEndPoint ipEndPoint, string path, string filename,
             long fileLength, int bufferSize = Int16.MaxValue)
@@ -25,10 +25,10 @@ namespace Share_a_Ton.Tcp
             _transferError = false;
 
             Client = client;
-            _networkStream = client.GetStream();
+            NetworkStream = client.GetStream();
         }
 
-        public override void Start()
+        public override void Start() 
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Share_a_Ton.Tcp
 
                     while (remaining > 0)
                     {
-                        var bytesRead = _networkStream.Read(_buffer, 0, Constants.DefaultBufferSize);
+                        var bytesRead = NetworkStream.Read(_buffer, 0, Constants.DefaultBufferSize);
                         fileStream.Write(_buffer, 0, bytesRead);
                         remaining -= bytesRead;
 
@@ -60,13 +60,13 @@ namespace Share_a_Ton.Tcp
                 {
                     _transferSuccess = true;
                     var successBytes = Message.ConvertCommandToBytes(Commands.Success);
-                    _networkStream.Write(successBytes, 0, successBytes.Length);
+                    NetworkStream.Write(successBytes, 0, successBytes.Length);
                     OnTransferCompleted(EventArgs.Empty);
                 }
                 else
                 {
                     var errorBytes = Message.ConvertCommandToBytes(Commands.Error);
-                    _networkStream.Write(errorBytes, 0, errorBytes.Length);
+                    NetworkStream.Write(errorBytes, 0, errorBytes.Length);
 
                     PerformCleanupOnDisconnect();
                 }
@@ -95,11 +95,11 @@ namespace Share_a_Ton.Tcp
             finally
             {
                 Client.Close();
-                _networkStream.Close();
+                NetworkStream.Close();
             }
         }
 
-        public override void Abort()
+        public override void Abort() 
         {
             Client.Close();
         }
@@ -110,19 +110,6 @@ namespace Share_a_Ton.Tcp
             {
                 File.Delete(Path);
             }
-        }
-
-        private static bool IsClientDisconnected(Socket clientSocket)
-        {
-            if (clientSocket.Poll(0, SelectMode.SelectRead))
-            {
-                var buffer = new byte[1];
-                if (clientSocket.Receive(buffer, SocketFlags.Peek) == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

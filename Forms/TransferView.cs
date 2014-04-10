@@ -29,7 +29,10 @@ namespace Share_a_Ton.Forms
             FormatFileLengthLabel();
 
             if (_transfer is OutgoingFileTransfer)
+            {
                 senderTextLabel.Text = "Sending to : ";
+                _transfer.Rejected += TransferRejected;
+            }
             else
                 senderTextLabel.Text = "Sender : ";
             senderLabel.Text = _transfer.Sender;
@@ -55,7 +58,7 @@ namespace Share_a_Ton.Forms
 
         public void TransferConnected(object sender, EventArgs e)
         {
-            SetTextWithColor("Connected!", Constants.SuccessColor);
+            SetTextWithColor("Queued!", Constants.SuccessColor);
             _isRunning = true;
         }
 
@@ -65,15 +68,24 @@ namespace Share_a_Ton.Forms
 
             SetButtonText("Okay");
             _isRunning = false;
+            
+            ScheduleFadeOut();
+        }
 
-            if(Options.AutoFadeOut)
-                _fadeOutTimer = new Timer(ForceClose, null, TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(-1));
+        public void TransferRejected(object sender, EventArgs e)
+        {
+            SetTextWithColor("Transfer rejected!", Constants.ErrorColor);
+
+            SetButtonText("Okay");
+            _isRunning = false;
+
+            ScheduleFadeOut();
         }
 
         public void TransferStarted(object sender, EventArgs e)
         {
             SetTextWithColor("Transfer started!", Constants.SuccessColor);
-            _isRunning = false;
+            _isRunning = true;
         }
 
         public void TransferCompleted(object sender, EventArgs e)
@@ -83,8 +95,7 @@ namespace Share_a_Ton.Forms
             SetButtonText("Close");
             _isRunning = false;
 
-            if (Options.AutoFadeOut)
-                _fadeOutTimer = new Timer(ForceClose, null, TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(-1));
+            ScheduleFadeOut();
         }
 
         public void TransferredPart(object sender, EventArgs e)
@@ -94,6 +105,10 @@ namespace Share_a_Ton.Forms
 
             SetTextWithColor("Transferring data...", Constants.WarningColor);
             SetProgress(value);
+
+            if(!_isRunning)
+                statusLabel.Text = "Transfer aborted!";
+
         }
 
         #endregion
@@ -105,6 +120,7 @@ namespace Share_a_Ton.Forms
                 _transfer.Abort();
                 statusLabel.Text = "Transfer aborted!";
                 actionButton.Text = "Close";
+                _isRunning = false;
             }
             else
                 Close();
@@ -115,7 +131,10 @@ namespace Share_a_Ton.Forms
             FadeOut();
         }
 
-        private void SetText(String text)
+        #region Cross-Thread Invocation
+
+
+        private void SetText(String text) 
         {
             if (statusLabel.InvokeRequired)
             {
@@ -191,7 +210,9 @@ namespace Share_a_Ton.Forms
             }
         }
 
-        private void FormatFileLengthLabel()
+        #endregion
+
+        private void FormatFileLengthLabel() 
         {
             decimal fileLength = _transfer.FileLength;
 
@@ -209,7 +230,13 @@ namespace Share_a_Ton.Forms
             }
         }
 
-        public void FadeOut()
+        private void ScheduleFadeOut() 
+        {
+            if (Options.AutoFadeOut)
+                _fadeOutTimer = new Timer(ForceClose, null, TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(-1));
+        }
+
+        private void FadeOut() 
         {
             for (var fadeOut = 1.1; fadeOut > 0; fadeOut -= 0.1)
             {

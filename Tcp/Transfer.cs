@@ -7,13 +7,15 @@ namespace Share_a_Ton.Tcp
     public abstract class Transfer
     {
         protected TcpClient Client;
+        protected NetworkStream NetworkStream;
         protected string Path;
         protected IPEndPoint RemoteEndPoint;
 
         /// <summary>
-        ///     Creates a new File transfer object, dedicated to a specific file transfer.
+        /// Creates a new File transfer object, dedicated to a specific file transfer.
         /// </summary>
-        /// <param name="client"></param>
+        /// <param name="client">The TcpClient object representing the connection.</param>
+        /// <param name="sender">Name of the sender PC, specified by the Sender user.</param>
         /// <param name="ipEndPoint">The remote ip end point that the clients connects to and wants to send the file.</param>
         /// <param name="path">The fully qualified path of the file to be sent.</param>
         /// <param name="filename">The name of the file to be sent.</param>
@@ -41,6 +43,7 @@ namespace Share_a_Ton.Tcp
         public event EventHandler Connected;
         public event EventHandler Disconnected;
         public event EventHandler Completed;
+        public event EventHandler Rejected;
         public event EventHandler<TransferArgs> TransferredChunk;
 
         protected virtual void OnTransferStarted(EventArgs e)
@@ -76,6 +79,14 @@ namespace Share_a_Ton.Tcp
             }
         }
 
+        protected virtual void OnTransferRejected(EventArgs e)
+        {
+            if (Rejected != null)
+            {
+                Rejected(this, e);
+            }
+        }
+
         protected virtual void OnTransferredChunk(TransferArgs e)
         {
             if (TransferredChunk != null)
@@ -90,6 +101,20 @@ namespace Share_a_Ton.Tcp
 
         public virtual void Abort()
         {
+        }
+
+
+        protected static bool IsClientDisconnected(Socket clientSocket)
+        {
+            if (clientSocket.Poll(0, SelectMode.SelectRead))
+            {
+                var buffer = new byte[1];
+                if (clientSocket.Receive(buffer, SocketFlags.Peek) == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
