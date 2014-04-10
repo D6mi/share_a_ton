@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 using Share_a_Ton.Utilities;
 
@@ -39,14 +38,14 @@ namespace Share_a_Ton.Tcp
                     Sender = Options.Username
                 };
 
-                var json = JsonConvert.SerializeObject(jsonMessage);
+                string json = JsonConvert.SerializeObject(jsonMessage);
 
                 var writer = new StreamWriter(NetworkStream) {AutoFlush = true};
                 writer.WriteLine(json);
 
                 NetworkStream.Read(buffer, 0, buffer.Length);
 
-                var command = Message.ConvertBytesToCommand(buffer);
+                Commands command = Message.ConvertBytesToCommand(buffer);
 
                 // Determine the appropriate action based on the command contents.
                 if (command == Commands.Accept)
@@ -58,6 +57,18 @@ namespace Share_a_Ton.Tcp
                         int bytesRead;
                         while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
+                            try
+                            {
+                                if (Client.Client.Poll(1, SelectMode.SelectRead) && Client.Client.Available == 0)
+                                {
+
+                                }
+                            }
+                            catch (SocketException)
+                            {
+                                break;
+                            }
+
                             var ratio = (decimal) BytesTransferred/FileLength;
                             ratio = ratio*1000;
                             NetworkStream.Write(buffer, 0, bytesRead);
@@ -88,7 +99,6 @@ namespace Share_a_Ton.Tcp
                 {
                     OnTransferRejected(EventArgs.Empty);
                 }
-
             }
             catch (ObjectDisposedException ex)
             {

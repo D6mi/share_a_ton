@@ -33,6 +33,8 @@
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.autoFadeOutCheckBox = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.autoOpenDownloadFolderCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,8 +48,6 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.statusLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.autoFadeOutCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -84,7 +84,7 @@
             this.usernameTextBox.MaxLength = 10;
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(126, 20);
-            this.usernameTextBox.TabIndex = 8;
+            this.usernameTextBox.TabIndex = 1;
             this.usernameTextBox.TextChanged += new System.EventHandler(this.usernameTextBox_TextChanged);
             // 
             // label5
@@ -112,6 +112,26 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             // 
+            // autoFadeOutCheckBox
+            // 
+            this.autoFadeOutCheckBox.AutoSize = true;
+            this.autoFadeOutCheckBox.Location = new System.Drawing.Point(205, 92);
+            this.autoFadeOutCheckBox.Name = "autoFadeOutCheckBox";
+            this.autoFadeOutCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.autoFadeOutCheckBox.TabIndex = 9;
+            this.autoFadeOutCheckBox.TabStop = false;
+            this.autoFadeOutCheckBox.UseVisualStyleBackColor = true;
+            this.autoFadeOutCheckBox.CheckedChanged += new System.EventHandler(this.fadeOutCheckBox_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 93);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(192, 13);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "Auto close transfer overview on finish : ";
+            // 
             // autoOpenDownloadFolderCheckBox
             // 
             this.autoOpenDownloadFolderCheckBox.AutoSize = true;
@@ -119,6 +139,7 @@
             this.autoOpenDownloadFolderCheckBox.Name = "autoOpenDownloadFolderCheckBox";
             this.autoOpenDownloadFolderCheckBox.Size = new System.Drawing.Size(15, 14);
             this.autoOpenDownloadFolderCheckBox.TabIndex = 7;
+            this.autoOpenDownloadFolderCheckBox.TabStop = false;
             this.autoOpenDownloadFolderCheckBox.UseVisualStyleBackColor = true;
             this.autoOpenDownloadFolderCheckBox.CheckedChanged += new System.EventHandler(this.autoOpenDownloadFolderCheckBox_CheckedChanged);
             // 
@@ -147,6 +168,7 @@
             this.askForDownloadFolderCheckBox.Name = "askForDownloadFolderCheckBox";
             this.askForDownloadFolderCheckBox.Size = new System.Drawing.Size(15, 14);
             this.askForDownloadFolderCheckBox.TabIndex = 4;
+            this.askForDownloadFolderCheckBox.TabStop = false;
             this.askForDownloadFolderCheckBox.UseVisualStyleBackColor = true;
             this.askForDownloadFolderCheckBox.CheckedChanged += new System.EventHandler(this.askForDownloadFolderCheckBox_CheckedChanged);
             // 
@@ -166,6 +188,7 @@
             this.confirmationCheckBox.Name = "confirmationCheckBox";
             this.confirmationCheckBox.Size = new System.Drawing.Size(15, 14);
             this.confirmationCheckBox.TabIndex = 3;
+            this.confirmationCheckBox.TabStop = false;
             this.confirmationCheckBox.UseVisualStyleBackColor = true;
             this.confirmationCheckBox.CheckedChanged += new System.EventHandler(this.confirmationCheckBox_CheckedChanged);
             // 
@@ -175,7 +198,7 @@
             this.openDownloadFolder.Location = new System.Drawing.Point(246, 81);
             this.openDownloadFolder.Name = "openDownloadFolder";
             this.openDownloadFolder.Size = new System.Drawing.Size(87, 24);
-            this.openDownloadFolder.TabIndex = 5;
+            this.openDownloadFolder.TabIndex = 3;
             this.openDownloadFolder.Text = "Download Folder";
             this.openDownloadFolder.UseVisualStyleBackColor = true;
             this.openDownloadFolder.Click += new System.EventHandler(this.openDownloadFolder_Click);
@@ -196,7 +219,7 @@
             this.downloadFolderTextBox.Location = new System.Drawing.Point(103, 55);
             this.downloadFolderTextBox.Name = "downloadFolderTextBox";
             this.downloadFolderTextBox.Size = new System.Drawing.Size(307, 20);
-            this.downloadFolderTextBox.TabIndex = 1;
+            this.downloadFolderTextBox.TabIndex = 2;
             this.downloadFolderTextBox.TextChanged += new System.EventHandler(this.downloadFolderTextBox_TextChanged);
             // 
             // label2
@@ -211,20 +234,22 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.cancelButton.Location = new System.Drawing.Point(351, 267);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 2;
+            this.cancelButton.TabIndex = 6;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             // 
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.okButton.Location = new System.Drawing.Point(270, 267);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 3;
+            this.okButton.TabIndex = 5;
             this.okButton.Text = "Ok";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -237,25 +262,6 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 13);
             this.statusLabel.TabIndex = 4;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 93);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(192, 13);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Auto close transfer overview on finish : ";
-            // 
-            // autoFadeOutCheckBox
-            // 
-            this.autoFadeOutCheckBox.AutoSize = true;
-            this.autoFadeOutCheckBox.Location = new System.Drawing.Point(205, 92);
-            this.autoFadeOutCheckBox.Name = "autoFadeOutCheckBox";
-            this.autoFadeOutCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.autoFadeOutCheckBox.TabIndex = 9;
-            this.autoFadeOutCheckBox.UseVisualStyleBackColor = true;
-            this.autoFadeOutCheckBox.CheckedChanged += new System.EventHandler(this.fadeOutCheckBox_CheckedChanged);
             // 
             // OptionsForm
             // 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -107,8 +108,8 @@ namespace Share_a_Ton.Forms
             SetTextWithColor(Strings.TransferInProgress, Constants.WarningColor);
             SetProgress(value);
 
-            if(!_isRunning)
-                statusLabel.Text = Strings.TransferAborted;
+            if (!_isRunning)
+                SetTextWithColor(Strings.TransferAborted, Constants.ErrorColor);
 
         }
 
@@ -207,7 +208,14 @@ namespace Share_a_Ton.Forms
             }
             else
             {
-                Close();
+                try
+                {
+                    Close();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
             }
         }
 

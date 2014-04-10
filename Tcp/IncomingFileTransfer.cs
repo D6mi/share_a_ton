@@ -105,8 +105,6 @@ namespace Share_a_Ton.Tcp
 
         public override void Abort()
         {
-            var errorBytes = Message.ConvertCommandToBytes(Commands.Abort);
-            NetworkStream.Write(errorBytes, 0, errorBytes.Length);
             Client.Close();
         }
 

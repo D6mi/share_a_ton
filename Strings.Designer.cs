@@ -151,7 +151,7 @@ namespace Share_a_Ton {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Transfer aborted....
+        ///   Looks up a localized string similar to Transfer aborted!.
         /// </summary>
         internal static string TransferAborted {
             get {
