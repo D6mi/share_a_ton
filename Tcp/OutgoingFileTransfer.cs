@@ -36,7 +36,7 @@ namespace Share_a_Ton.Tcp
                     Command = Commands.Send,
                     FileLength = FileLength,
                     Filename = Filename,
-                    Sender = "D6mi-PC"
+                    Sender = Options.Username
                 };
 
                 var json = JsonConvert.SerializeObject(jsonMessage);
@@ -77,6 +77,11 @@ namespace Share_a_Ton.Tcp
                     if (command == Commands.Success)
                     {
                         OnTransferCompleted(EventArgs.Empty);
+                    }
+
+                    if (command == Commands.Abort)
+                    {
+                        OnTransferDisconnected(EventArgs.Empty);
                     }
                 }
                 else if (command == Commands.Reject)

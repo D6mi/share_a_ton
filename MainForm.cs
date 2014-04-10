@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -18,6 +19,7 @@ namespace Share_a_Ton
         private readonly String _downloadFolderPath;
         private readonly TcpManager _tcpManager;
         private readonly UdpManager _udpManager;
+        private readonly FileSystemWatcher _watcher;
 
         public MainForm()
         {
@@ -25,16 +27,16 @@ namespace Share_a_Ton
 
             #region Initial Setup
 
-            var usernameFromSettings = Settings.Default.Username;
+            string usernameFromSettings = Settings.Default.Username;
 
             if (String.IsNullOrWhiteSpace(usernameFromSettings))
             {
-                var username = Dns.GetHostName();
+                string username = Dns.GetHostName();
                 Settings.Default.Username = username;
                 Settings.Default.Save();
             }
 
-            var path = Settings.Default.DownloadFolder;
+            string path = Settings.Default.DownloadFolder;
 
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -43,19 +45,29 @@ namespace Share_a_Ton
                 var fileBrowserDialog = new FolderBrowserDialog();
 
                 DialogResult dr = fileBrowserDialog.ShowDialog();
+
                 if (DialogResult.OK == dr)
                 {
                     Settings.Default.DownloadFolder = fileBrowserDialog.SelectedPath;
-                    _downloadFolderPath = fileBrowserDialog.SelectedPath;
+                    Options.DownloadFolderPath = fileBrowserDialog.SelectedPath;
                     Settings.Default.Save();
                 }
             }
 
             #endregion
 
+            string directory = Directory.GetParent(Options.DownloadFolderPath).FullName;
+            Debug.WriteLine("DIRECTORY : " + directory);
+            _watcher = new FileSystemWatcher(directory) {NotifyFilter = NotifyFilters.DirectoryName};
+            _watcher.Deleted += OnFileDeleted;
+            _watcher.EnableRaisingEvents = true;
+
+            Options.DownloadFolderChanged += OnDownloadFolderChanged;
+
             #region Network related
 
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+
             foreach (IPAddress ipAddress in host.AddressList)
             {
                 if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
@@ -67,7 +79,7 @@ namespace Share_a_Ton
             _udpManager.PeerConnected += AddClientToList;
             _udpManager.PeerDisconnected += RemoveClientFromList;
 
-            _tcpManager = new TcpManager(LocalIpEndPoint, _downloadFolderPath);
+            _tcpManager = new TcpManager(LocalIpEndPoint, Options.DownloadFolderPath);
 
             var t = new Thread(_tcpManager.StartListeningForTransfers) {IsBackground = true};
             t.Start();
@@ -78,8 +90,21 @@ namespace Share_a_Ton
         public IPAddress MyAddress { get; private set; }
         public IPEndPoint LocalIpEndPoint { get; set; }
 
-
         #region Cross-thread Method Invocation
+
+        private void SetTextWithColor(String text, Color color)
+        {
+            if (statusLabel.InvokeRequired)
+            {
+                SetTextWithColorCallback textWithColorback = SetTextWithColor;
+                Invoke(textWithColorback, new object[] { text, color });
+            }
+            else
+            {
+                statusLabel.ForeColor = color;
+                statusLabel.Text = text;
+            }
+        }
 
         public void AddClientToList(object sender, ClientArgs args)
         {
@@ -107,7 +132,7 @@ namespace Share_a_Ton
 
                     var addNotification = new Notification(DateTime.Now.ToShortTimeString() + " : Client joined",
                         client + " has joined!");
-                    addNotification.Show(this);
+                    new Thread(() => addNotification.ShowDialog()).Start();
                 }
             }
         }
@@ -198,8 +223,8 @@ namespace Share_a_Ton
                 else
                 {
                     // Get the path of the dropped file.
-                    var path = paths[0];
-                    var info = new FileInfo(path) { IsReadOnly = false };
+                    string path = paths[0];
+                    var info = new FileInfo(path) {IsReadOnly = false};
                     info.Refresh();
 
                     // Check if the dropped file's a directory/folder.
@@ -209,14 +234,14 @@ namespace Share_a_Ton
                         statusLabel.Text = Strings.DirectoryDraggedErrorString;
                     }
                         
-                    // Everything's good, we got a valid file.
+                        // Everything's good, we got a valid file.
                     else
                     {
                         // Get the mouse coordinates relative to the control (ListView).
-                        var point = listOfPcs.PointToClient(new Point(e.X, e.Y));
+                        Point point = listOfPcs.PointToClient(new Point(e.X, e.Y));
 
                         // Get the ListViewItem on which the file was dropped.
-                        var item = listOfPcs.GetItemAt(point.X, point.Y);
+                        ListViewItem item = listOfPcs.GetItemAt(point.X, point.Y);
 
                         if (item != null)
                         {
@@ -259,7 +284,33 @@ namespace Share_a_Ton
 
         #endregion
 
-        private delegate void AddRemoveCallback(ClientInfo client);
+        #region File Watcher
 
+        private void OnFileDeleted(object sender, EventArgs e)
+        {
+            Options.IsDownloadFolderSet = false;
+            Options.DownloadFolderPath = "";
+            Settings.Default.DownloadFolder = "";
+
+            Debug.WriteLine("FILE WATCHER : The directory was deleted!");
+
+            SetTextWithColor(Strings.FileDeletedWarning, Constants.WarningColor);
+        }
+
+        private void OnDownloadFolderChanged(object sender, EventArgs e)
+        {
+            var args = (FolderArgs) e;
+
+            if (!String.IsNullOrWhiteSpace(args.Path))
+            {
+                _watcher.Path = Directory.GetParent(args.Path).FullName;
+                Debug.WriteLine("FILE WATCHER : Now watching @" + _watcher.Path);
+            }
+        }
+        
+        #endregion
+
+        private delegate void SetTextWithColorCallback(string text, Color color);
+        private delegate void AddRemoveCallback(ClientInfo client);
     }
 }

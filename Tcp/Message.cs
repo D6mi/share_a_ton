@@ -11,7 +11,8 @@ namespace Share_a_Ton.Tcp
         Accept,
         Reject,
         Success,
-        Error
+        Error,
+        Abort
     }
 
     internal class Message

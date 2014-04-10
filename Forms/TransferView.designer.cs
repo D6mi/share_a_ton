@@ -68,20 +68,18 @@
             // filelengthLabel
             // 
             this.filelengthLabel.AutoSize = true;
-            this.filelengthLabel.Location = new System.Drawing.Point(79, 59);
+            this.filelengthLabel.Location = new System.Drawing.Point(103, 59);
             this.filelengthLabel.Name = "filelengthLabel";
-            this.filelengthLabel.Size = new System.Drawing.Size(67, 13);
+            this.filelengthLabel.Size = new System.Drawing.Size(0, 13);
             this.filelengthLabel.TabIndex = 4;
-            this.filelengthLabel.Text = "2313010 Mb";
             // 
             // senderLabel
             // 
             this.senderLabel.AutoSize = true;
-            this.senderLabel.Location = new System.Drawing.Point(79, 91);
+            this.senderLabel.Location = new System.Drawing.Point(103, 91);
             this.senderLabel.Name = "senderLabel";
-            this.senderLabel.Size = new System.Drawing.Size(47, 13);
+            this.senderLabel.Size = new System.Drawing.Size(0, 13);
             this.senderLabel.TabIndex = 3;
-            this.senderLabel.Text = "D6mi-Pc";
             // 
             // senderTextLabel
             // 
@@ -95,11 +93,10 @@
             // filenameLabel
             // 
             this.filenameLabel.AutoSize = true;
-            this.filenameLabel.Location = new System.Drawing.Point(79, 29);
+            this.filenameLabel.Location = new System.Drawing.Point(103, 29);
             this.filenameLabel.Name = "filenameLabel";
-            this.filenameLabel.Size = new System.Drawing.Size(59, 13);
+            this.filenameLabel.Size = new System.Drawing.Size(0, 13);
             this.filenameLabel.TabIndex = 1;
-            this.filenameLabel.Text = "Test Name";
             // 
             // label1
             // 
@@ -134,9 +131,8 @@
             this.statusLabel.AutoSize = true;
             this.statusLabel.Location = new System.Drawing.Point(12, 184);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(69, 13);
+            this.statusLabel.Size = new System.Drawing.Size(0, 13);
             this.statusLabel.TabIndex = 3;
-            this.statusLabel.Text = "Transfering...";
             // 
             // TransferView
             // 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -83,22 +84,22 @@ namespace Share_a_Ton.Udp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    Debug.WriteLine(ex.ToString());
                 }
             }
         }
 
         public int Broadcast(UdpData data)
         {
-            int bytesSent = 0;
-            IPAddress broadcastAddress = IPAddress.Parse("192.168.1.255");
+            var bytesSent = 0;
+            var broadcastAddress = IPAddress.Parse("192.168.1.255");
             var broadcastEndPoint = new IPEndPoint(broadcastAddress, ListenPort);
 
             using (var client = new UdpClient())
             {
                 try
                 {
-                    byte[] dataToSend = data.ToBytes();
+                    var dataToSend = data.ToBytes();
                     bytesSent = client.Send(dataToSend, dataToSend.Length, broadcastEndPoint);
                 }
                 catch (Exception ex)
@@ -112,18 +113,18 @@ namespace Share_a_Ton.Udp
 
         public int Send(UdpData data, IPEndPoint endPoint)
         {
-            int bytesSent = 0;
+            var bytesSent = 0;
             using (var client = new UdpClient())
             {
                 try
                 {
-                    byte[] dataToSend = data.ToBytes();
+                    var dataToSend = data.ToBytes();
                     client.Connect(endPoint);
                     bytesSent = client.Send(dataToSend, dataToSend.Length);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    Debug.WriteLine(ex.ToString());
                 }
             }
 

@@ -23,10 +23,14 @@ namespace Share_a_Ton
             if (!firstTimeSetupPerformed)
             {
                 var options = new OptionsForm();
-                options.ShowDialog();
-                Settings.Default.FirstTimeSetupPerformed = true;
-            }
+                var dr = options.ShowDialog();
 
+                if (dr == DialogResult.OK)
+                {
+                    Settings.Default.FirstTimeSetupPerformed = true;
+                    Application.Run(new MainForm());
+                }
+            }
             Application.Run(new MainForm());
         }
     }

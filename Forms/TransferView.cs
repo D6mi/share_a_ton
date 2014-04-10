@@ -30,11 +30,12 @@ namespace Share_a_Ton.Forms
 
             if (_transfer is OutgoingFileTransfer)
             {
-                senderTextLabel.Text = "Sending to : ";
+                senderTextLabel.Text = Strings.SendTo;
                 _transfer.Rejected += TransferRejected;
             }
             else
-                senderTextLabel.Text = "Sender : ";
+                senderTextLabel.Text = Strings.ReceivingFrom;
+
             senderLabel.Text = _transfer.Sender;
 
             _transfer.Connected += TransferConnected;
@@ -58,15 +59,15 @@ namespace Share_a_Ton.Forms
 
         public void TransferConnected(object sender, EventArgs e)
         {
-            SetTextWithColor("Queued!", Constants.SuccessColor);
+            SetTextWithColor(Strings.Queued, Constants.SuccessColor);
             _isRunning = true;
         }
 
         public void TransferDisconnected(object sender, EventArgs e)
         {
-            SetTextWithColor("Transfer terminated!", Constants.ErrorColor);
+            SetTextWithColor(Strings.TransferTerminated, Constants.ErrorColor);
 
-            SetButtonText("Okay");
+            SetButtonText(Strings.TransferViewOkay);
             _isRunning = false;
             
             ScheduleFadeOut();
@@ -74,9 +75,9 @@ namespace Share_a_Ton.Forms
 
         public void TransferRejected(object sender, EventArgs e)
         {
-            SetTextWithColor("Transfer rejected!", Constants.ErrorColor);
+            SetTextWithColor(Strings.TransferRejected, Constants.ErrorColor);
 
-            SetButtonText("Okay");
+            SetButtonText(Strings.TransferViewOkay);
             _isRunning = false;
 
             ScheduleFadeOut();
@@ -84,15 +85,15 @@ namespace Share_a_Ton.Forms
 
         public void TransferStarted(object sender, EventArgs e)
         {
-            SetTextWithColor("Transfer started!", Constants.SuccessColor);
+            SetTextWithColor(Strings.TransferStarted, Constants.SuccessColor);
             _isRunning = true;
         }
 
         public void TransferCompleted(object sender, EventArgs e)
         {
-            SetTextWithColor("Transfer completed!", Constants.SuccessColor);
+            SetTextWithColor(Strings.TransferCompleted, Constants.SuccessColor);
 
-            SetButtonText("Close");
+            SetButtonText(Strings.TransferViewClose);
             _isRunning = false;
 
             ScheduleFadeOut();
@@ -103,11 +104,11 @@ namespace Share_a_Ton.Forms
             var args = (TransferArgs) e;
             var value = args.BytesTransfered;
 
-            SetTextWithColor("Transferring data...", Constants.WarningColor);
+            SetTextWithColor(Strings.TransferInProgress, Constants.WarningColor);
             SetProgress(value);
 
             if(!_isRunning)
-                statusLabel.Text = "Transfer aborted!";
+                statusLabel.Text = Strings.TransferAborted;
 
         }
 
@@ -118,8 +119,8 @@ namespace Share_a_Ton.Forms
             if (_isRunning)
             {
                 _transfer.Abort();
-                statusLabel.Text = "Transfer aborted!";
-                actionButton.Text = "Close";
+                statusLabel.Text = Strings.TransferAborted;
+                actionButton.Text = Strings.TransferViewClose;
                 _isRunning = false;
             }
             else

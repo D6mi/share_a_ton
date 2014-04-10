@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using Share_a_Ton.Properties;
@@ -9,7 +10,7 @@ namespace Share_a_Ton.Forms
 {
     public partial class OptionsForm : Form
     {
-        private const int MaxNumberOfCharacters = 10;
+        private const int MaxNumberOfCharacters = 15;
 
         /// <summary>
         /// The name by which this PC will be known.
@@ -55,7 +56,14 @@ namespace Share_a_Ton.Forms
             usernameTextBox.Focus();
 
             Username = Settings.Default.Username;
-            DownloadFolderPath = Settings.Default.DownloadFolder;
+
+            var directory = Settings.Default.DownloadFolder;
+
+            if (Directory.Exists(directory))
+                DownloadFolderPath = directory;
+            else
+                DownloadFolderPath = String.Empty;
+
             ConfirmationNeeded = Settings.Default.ConfirmationNeeded;
             AskForDownloadFolder = Settings.Default.AskToOpenDownloadFolderOnTransfer;
             AutoOpenDownloadFolder = Settings.Default.AutomaticallyOpenDownloadFolderOnTransfer;
@@ -72,7 +80,7 @@ namespace Share_a_Ton.Forms
             if (CanClose())
             {
                 okButton.Enabled = true;
-                statusLabel.Text = "";
+                statusLabel.Text = String.Empty;
             }
             else
             {
@@ -105,9 +113,11 @@ namespace Share_a_Ton.Forms
 
             Options.Username = Username;
             Options.DownloadFolderPath = DownloadFolderPath;
+            Options.IsDownloadFolderSet = true;
             Options.ConfirmationNeeded = ConfirmationNeeded;
             Options.AutoOpenDownloadFolder = AutoOpenDownloadFolder;
             Options.AskForDownloadFolder = AskForDownloadFolder;
+            Options.AutoFadeOut = AutoFadeOut;
         }
 
         /// <summary>
@@ -119,6 +129,8 @@ namespace Share_a_Ton.Forms
             return !String.IsNullOrWhiteSpace(usernameTextBox.Text) &&
                    !String.IsNullOrWhiteSpace(downloadFolderTextBox.Text);
         }
+
+        #region Form Events
 
         // Update the "_confirmationNeeded" variable when the state of the CheckBox changes.
         private void confirmationCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -133,7 +145,7 @@ namespace Share_a_Ton.Forms
             var dr = fileBrowserDialog.ShowDialog(this);
             if (DialogResult.OK == dr)
             {
-                DownloadFolderPath = fileBrowserDialog.SelectedPath + "\\";
+                DownloadFolderPath = fileBrowserDialog.SelectedPath;
                 downloadFolderTextBox.Text = DownloadFolderPath;
             }
 
@@ -191,7 +203,7 @@ namespace Share_a_Ton.Forms
         {
             if (usernameTextBox.Text.Length == MaxNumberOfCharacters)
             {
-                usernameErrorLabel.ForeColor = Constants.ErrorColor;
+                usernameErrorLabel.ForeColor = Constants.WarningColor;
                 usernameErrorLabel.Text = String.Format("Maximum number of characters is {0}!", MaxNumberOfCharacters);
             }
             else
@@ -229,5 +241,8 @@ namespace Share_a_Ton.Forms
         {
             usernameTextBox.Focus();
         }
+
+#endregion
+
     }
 }

@@ -97,6 +97,15 @@ namespace Share_a_Ton {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your download folder has been deleted, please specify a new one..
+        /// </summary>
+        internal static string FileDeletedWarning {
+            get {
+                return ResourceManager.GetString("FileDeletedWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please drag one file at a time!.
         /// </summary>
         internal static string MultipleFilesDraggedErrorString {
@@ -111,6 +120,105 @@ namespace Share_a_Ton {
         internal static string OptionsUsernameOrDownloadFolderErrorString {
             get {
                 return ResourceManager.GetString("OptionsUsernameOrDownloadFolderErrorString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queued!.
+        /// </summary>
+        internal static string Queued {
+            get {
+                return ResourceManager.GetString("Queued", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receiving from :.
+        /// </summary>
+        internal static string ReceivingFrom {
+            get {
+                return ResourceManager.GetString("ReceivingFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sending to :.
+        /// </summary>
+        internal static string SendTo {
+            get {
+                return ResourceManager.GetString("SendTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer aborted....
+        /// </summary>
+        internal static string TransferAborted {
+            get {
+                return ResourceManager.GetString("TransferAborted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer completed!.
+        /// </summary>
+        internal static string TransferCompleted {
+            get {
+                return ResourceManager.GetString("TransferCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferring data....
+        /// </summary>
+        internal static string TransferInProgress {
+            get {
+                return ResourceManager.GetString("TransferInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer rejected!.
+        /// </summary>
+        internal static string TransferRejected {
+            get {
+                return ResourceManager.GetString("TransferRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer started!.
+        /// </summary>
+        internal static string TransferStarted {
+            get {
+                return ResourceManager.GetString("TransferStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer terminated!.
+        /// </summary>
+        internal static string TransferTerminated {
+            get {
+                return ResourceManager.GetString("TransferTerminated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string TransferViewClose {
+            get {
+                return ResourceManager.GetString("TransferViewClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Okay.
+        /// </summary>
+        internal static string TransferViewOkay {
+            get {
+                return ResourceManager.GetString("TransferViewOkay", resourceCulture);
             }
         }
     }

@@ -44,7 +44,7 @@ namespace Share_a_Ton.Forms
 
         public void FadeOut()
         {
-            for (double fadeOut = 1.1; fadeOut > 0; fadeOut -= 0.1)
+            for (var fadeOut = 1.1; fadeOut > 0; fadeOut -= 0.1)
             {
                 Opacity = fadeOut;
                 Refresh();

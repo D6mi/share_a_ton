@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Share_a_Ton.Forms;
@@ -39,7 +41,7 @@ namespace Share_a_Ton.Tcp
                     message = JsonConvert.DeserializeObject<JSONMessage>(json);
 
                     var filename = message.Filename;
-                    var path = Options.DownloadFolderPath + message.Filename;
+                    var path = Options.DownloadFolderPath + "\\" + message.Filename;
                     var fileLength = message.FileLength;
                     var sender = message.Sender;
 
@@ -81,12 +83,13 @@ namespace Share_a_Ton.Tcp
                         var transfer = new IncomingFileTransfer(client, message.Sender, null, path, filename,
                             fileLength);
                         var tView = new TransferView(transfer);
-                        tView.ShowDialog();
+                        new Thread(() => tView.ShowDialog()) { IsBackground = true }.Start();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    Debug.WriteLine("---------- EXCEPTION ----------");
+                    Debug.WriteLine(ex.ToString());
                 }
 
                 #endregion
@@ -98,7 +101,7 @@ namespace Share_a_Ton.Tcp
         {
             var transfer = new OutgoingFileTransfer(null, sender, ipEndPoint, path, filename, fileLength);
             var tView = new TransferView(transfer);
-            tView.Show();
+            new Thread(() => tView.ShowDialog()) { IsBackground = true }.Start();
         }
     }
 }

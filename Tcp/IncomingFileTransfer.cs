@@ -30,6 +30,9 @@ namespace Share_a_Ton.Tcp
 
         public override void Start() 
         {
+            if (!Directory.Exists(Directory.GetParent(Path).FullName))
+                throw new Exception("The download folder doesn't exist!");
+
             try
             {
                 using (var fileStream = new FileStream(Path, FileMode.Create))
@@ -91,6 +94,7 @@ namespace Share_a_Ton.Tcp
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
+                OnTransferDisconnected(EventArgs.Empty);
             }
             finally
             {
@@ -99,8 +103,10 @@ namespace Share_a_Ton.Tcp
             }
         }
 
-        public override void Abort() 
+        public override void Abort()
         {
+            var errorBytes = Message.ConvertCommandToBytes(Commands.Abort);
+            NetworkStream.Write(errorBytes, 0, errorBytes.Length);
             Client.Close();
         }
 
